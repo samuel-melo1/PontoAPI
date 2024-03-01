@@ -2,10 +2,12 @@ package com.eletronico.pontoapi.core.services;
 
 import com.eletronico.pontoapi.adapters.database.UserRepository;
 import com.eletronico.pontoapi.core.domain.User;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 
+@Service
 public class UserService {
 
     private UserRepository userRepository;
