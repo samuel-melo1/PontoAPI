@@ -16,11 +16,15 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User user(User user){
+    public User saveUser(User user){
         List<User> userExist = userRepository.findAllById(Collections.singleton(user.getId_user()));
         if(!userExist.isEmpty()){
             throw new RuntimeException();
         }
         return userRepository.save(user);
+    }
+
+    public List<User> listUser(){
+        return userRepository.findAll();
     }
 }
