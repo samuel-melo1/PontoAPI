@@ -20,7 +20,7 @@ public class TokenAccessUser {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()
-                    .withIssuer("library-api")
+                    .withIssuer("ponto-api")
                     .withSubject(user.getEmail())
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
@@ -34,7 +34,7 @@ public class TokenAccessUser {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
-                    .withIssuer("library-api")
+                    .withIssuer("ponto-api")
                     .build()
                     .verify(token)
                     .getSubject();
