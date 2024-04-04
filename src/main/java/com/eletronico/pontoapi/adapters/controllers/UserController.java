@@ -6,13 +6,12 @@ import com.eletronico.pontoapi.core.services.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/apí/v1/")
+@RequestMapping(value = "/api/v1")
 public class UserController {
 
     private UserService userService;
@@ -23,9 +22,11 @@ public class UserController {
 
     @PostMapping("/save")
     public ResponseEntity<User> saveUser(@RequestBody UserDTO userDTO){
-        var newUser = new User();
-        BeanUtils.copyProperties(userDTO, newUser);
-        return new ResponseEntity<>(this.userService.saveUser(newUser), HttpStatus.OK);
+        return new ResponseEntity<>(this.userService.saveUser(userDTO), HttpStatus.OK);
     }
 
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getUserList(){
+        return new ResponseEntity<>(userService.listUser(), HttpStatus.OK);
+    }
 }
