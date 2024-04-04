@@ -1,4 +1,7 @@
 package com.eletronico.pontoapi.core.dto;
 
-public record UserDTO(String username, String password) {
+import com.eletronico.pontoapi.core.enums.UserRole;
+
+public record UserDTO(String email, String password, String telefone, String name,
+                      UserRole userRole) {
 }
