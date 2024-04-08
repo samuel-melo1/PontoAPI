@@ -4,10 +4,15 @@ import com.eletronico.pontoapi.adapters.database.UserRepository;
 import com.eletronico.pontoapi.core.domain.User;
 import com.eletronico.pontoapi.core.dto.UserDTO;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,15 +22,15 @@ public class UserService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
-    public User saveUser(UserDTO userDTO){
+    public User saveUser(UserDTO userDTO) {
 
-        if(userRepository.existsPessoaByEmail(userDTO.email())){
+        if (userRepository.existsPessoaByEmail(userDTO.email())) {
             throw new RuntimeException();
         }
         String encryptedPassword = new BCryptPasswordEncoder().encode(userDTO.password());
@@ -41,7 +46,13 @@ public class UserService {
         return userRepository.save(newUser);
     }
 
-    public List<User> listUser(){
-        return userRepository.findAll();
+    public List<User> listUser(Integer page, Integer pageSize) {
+        Pageable pages = PageRequest.of(page, pageSize);
+        Page<User> pagedResult = userRepository.findAll(pages);
+        if (pagedResult.hasContent()) {
+            return pagedResult.getContent();
+        } else {
+            return new ArrayList<User>();
+        }
     }
 }

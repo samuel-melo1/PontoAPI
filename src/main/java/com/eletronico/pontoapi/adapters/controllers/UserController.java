@@ -4,6 +4,8 @@ import com.eletronico.pontoapi.core.domain.User;
 import com.eletronico.pontoapi.core.dto.UserDTO;
 import com.eletronico.pontoapi.core.services.UserService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +28,8 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getUserList(){
-        return new ResponseEntity<>(userService.listUser(), HttpStatus.OK);
+    public ResponseEntity<List<User>> getUserList(@RequestParam(defaultValue = "0") Integer page,
+                                                  @RequestParam(defaultValue = "10") Integer pageSize){
+        return new ResponseEntity<>(userService.listUser(page, pageSize), HttpStatus.OK);
     }
 }
