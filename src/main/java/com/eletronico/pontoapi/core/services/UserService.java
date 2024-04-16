@@ -32,11 +32,9 @@ public class UserService {
         if (userRepository.existsPessoaByEmail(userDTO.email())) {
             throw new RuntimeException();
         }
-        String encryptedPassword = new BCryptPasswordEncoder().encode(userDTO.password());
-
         User newUser = User.builder()
                 .email(userDTO.email())
-                .password(encryptedPassword)
+                .password(passwordEncoder.encode(userDTO.password()))
                 .userRole(userDTO.userRole())
                 .telefone(userDTO.telefone())
                 .status(true)

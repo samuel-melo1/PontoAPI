@@ -25,8 +25,8 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getUserList(@RequestParam(defaultValue = "0") Integer page,
-                                                  @RequestParam(defaultValue = "10") Integer pageSize){
+    public ResponseEntity<List<User>> getUserList(@RequestParam  Integer page,
+                                                  @RequestParam Integer pageSize){
         return new ResponseEntity<>(userService.listUser(page, pageSize), HttpStatus.OK);
     }
 }
