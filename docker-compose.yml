@@ -6,15 +6,15 @@ services:
     volumes:
       - database:/var/lib/postgres
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:${DB_PORT}"
     restart: always
     environment:
       TZ: America/Sao_Paulo
-      POSTGRES_PASSWORD: root
-      POSTGRES_USER: postgres
-      POSTGRES_DB: pontoapi
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_NAME}
     expose:
-      - 5432
+      - ${DB_PORT}
     networks:
       - pontoapi-network
 
@@ -25,9 +25,9 @@ services:
     working_dir: /
     environment:
       TZ: America/Sao_Paulo
-      SPRING.DATASOURCE.URL: jdbc:postgresql://db:5432/pontoapi
-      SPRING.DATASOURCE.USERNAME: postgres
-      SPRING.DATASOURCE.PASSWORD: root
+      SPRING.DATASOURCE.URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+      SPRING.DATASOURCE.USERNAME: ${DB_USERNAME}
+      SPRING.DATASOURCE.PASSWORD: ${DB_PASSWORD}
     ports:
       - 8080:8080
     command: mvn package && java -jar target/*.jar
