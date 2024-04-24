@@ -1,8 +1,8 @@
 package com.eletronico.pontoapi.adapters.controllers;
 
 import com.eletronico.pontoapi.adapters.config.tokenConfig.TokenAccessUser;
-import com.eletronico.pontoapi.adapters.response.AuthenticationDTO;
-import com.eletronico.pontoapi.adapters.response.LoginResponseDTO;
+import com.eletronico.pontoapi.core.dto.AuthenticationDTO;
+import com.eletronico.pontoapi.core.dto.LoginResponseDTO;
 import com.eletronico.pontoapi.core.domain.User;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

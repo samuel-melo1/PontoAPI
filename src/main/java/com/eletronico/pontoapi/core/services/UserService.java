@@ -44,8 +44,7 @@ public class UserService {
         Page<User> pagedResult = userRepository.findAll(pages);
         if (pagedResult.hasContent()) {
             return pagedResult.getContent();
-        } else {
-            return new ArrayList<User>();
         }
+        return new ArrayList<User>();
     }
 }
