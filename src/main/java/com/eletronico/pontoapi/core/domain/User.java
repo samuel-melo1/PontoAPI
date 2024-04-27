@@ -30,19 +30,18 @@ public class User  implements UserDetails, Serializable {
     private String telefone;
     private Boolean status;
     private UserRole userRole;
-
-
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.userRole == UserRole.ADMIN){
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("USER_ROLE"));
+        if(this.userRole == UserRole.ADMINISTRADOR){
+            return List.of(new SimpleGrantedAuthority("ADMINISTRADOR"), new SimpleGrantedAuthority("GESTOR") , new SimpleGrantedAuthority("COLABORADOR"));
         }
-        else{
-            return List.of(new SimpleGrantedAuthority("USER_ROLE"));
+        else if(this.userRole == UserRole.GESTOR){
+            return List.of(new SimpleGrantedAuthority("GESTOR"), new SimpleGrantedAuthority("COLABORADOR"));
+        }else {
+            return List.of(new SimpleGrantedAuthority("COLABORADOR"));
         }
     }
-
     @Override
     public String getUsername() {
         return email;
