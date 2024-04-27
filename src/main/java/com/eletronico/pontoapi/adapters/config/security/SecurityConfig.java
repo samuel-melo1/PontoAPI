@@ -22,20 +22,19 @@ public class SecurityConfig {
 
 
     private SecurityFilter securityFilter;
-
     public SecurityConfig(SecurityFilter securityFilter){
         this.securityFilter = securityFilter;
     }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/api/v1/createuser").hasRole("GESTOR")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/createuser").hasAuthority("GESTOR")
                         .requestMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/v1/users").hasRole("GESTOR")
+                        .requestMatchers(HttpMethod.GET,"/api/v1/users").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/auth/forgot-password").permitAll()
                         .requestMatchers(AUTH_WHITELIST).hasRole("ADMINISTRADOR")
                         .anyRequest().authenticated()
                 )
