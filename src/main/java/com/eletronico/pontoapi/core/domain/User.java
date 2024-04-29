@@ -1,6 +1,7 @@
 package com.eletronico.pontoapi.core.domain;
 
 import com.eletronico.pontoapi.core.enums.UserRole;
+import com.eletronico.pontoapi.core.password.PasswordResetToken;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,6 +31,7 @@ public class User  implements UserDetails, Serializable {
     private String telefone;
     private Boolean status;
     private UserRole userRole;
+
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
