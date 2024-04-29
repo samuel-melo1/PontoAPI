@@ -1,7 +1,6 @@
 package com.eletronico.pontoapi.core.domain;
 
 import com.eletronico.pontoapi.core.enums.UserRole;
-import com.eletronico.pontoapi.core.password.PasswordResetToken;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
