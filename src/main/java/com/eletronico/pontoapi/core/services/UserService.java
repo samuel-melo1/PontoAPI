@@ -52,13 +52,13 @@ public class UserService  {
         return userRepository.findUserByEmail(email);
     }
 
-    @Transactional
-    public void changePassword(User user, String newPassword) {
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
-    }
-    public boolean oldPasswordIsValid(User user, String oldPassword){
-        return passwordEncoder.matches(oldPassword, user.getPassword());
-    }
+//    @Transactional
+//    public void changePassword(User user, String newPassword) {
+//        user.setPassword(passwordEncoder.encode(newPassword));
+//        userRepository.save(user);
+//    }
+//    public boolean oldPasswordIsValid(User user, String oldPassword){
+//        return passwordEncoder.matches(oldPassword, user.getPassword());
+//    }
 
 }
