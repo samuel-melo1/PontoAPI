@@ -2,25 +2,21 @@ package com.eletronico.pontoapi.core.services;
 
 import com.eletronico.pontoapi.adapters.database.UserRepository;
 import com.eletronico.pontoapi.core.domain.User;
+import com.eletronico.pontoapi.core.dto.StandardListUserDTO;
 import com.eletronico.pontoapi.core.dto.UserDTO;
 import com.eletronico.pontoapi.core.exceptions.UserAlredyExistException;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
-public class UserService  {
+public class UserService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
+
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -42,23 +38,25 @@ public class UserService  {
 
         return userRepository.save(newUser);
     }
-    public Page<User> listUser(Integer page, Integer pageSize) {
+    public Page<StandardListUserDTO> listUser(Integer page, Integer pageSize) {
         Pageable pages = PageRequest.of(page, pageSize);
         Page<User> pagedResult = userRepository.findAll(pages);
-        return pagedResult;
 
+        Page<StandardListUserDTO> pagedDto = pagedResult.map(entity -> {
+            StandardListUserDTO dto = entityToDo(entity);
+            return dto;
+        });
+        return pagedDto;
     }
-    public User findByEmail(String email){
+    public User findByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
-
-//    @Transactional
-//    public void changePassword(User user, String newPassword) {
-//        user.setPassword(passwordEncoder.encode(newPassword));
-//        userRepository.save(user);
-//    }
-//    public boolean oldPasswordIsValid(User user, String oldPassword){
-//        return passwordEncoder.matches(oldPassword, user.getPassword());
-//    }
-
+    public StandardListUserDTO entityToDo(User user) {
+        StandardListUserDTO standardListUserDTO = new StandardListUserDTO();
+        standardListUserDTO.setName(user.getEmail());
+        standardListUserDTO.setTelefone(user.getTelefone());
+        standardListUserDTO.setEmail(user.getEmail());
+        standardListUserDTO.setUserRole(user.getUserRole());
+        return standardListUserDTO;
+    }
 }

@@ -2,6 +2,7 @@ package com.eletronico.pontoapi.adapters.controllers;
 
 import com.eletronico.pontoapi.adapters.response.standardResponse.ResponseHandler;
 import com.eletronico.pontoapi.core.domain.User;
+import com.eletronico.pontoapi.core.dto.StandardListUserDTO;
 import com.eletronico.pontoapi.core.dto.UserDTO;
 import com.eletronico.pontoapi.core.services.UserService;
 import org.springframework.boot.web.embedded.netty.NettyWebServer;
@@ -29,8 +30,8 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<Page<User>> getUserList(@RequestParam(name = "page", defaultValue = "0") int page,
-                                                  @RequestParam(name = "size", defaultValue = "10") int size){
+    public ResponseEntity<Page<StandardListUserDTO>> getUserList(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                                 @RequestParam(name = "size", defaultValue = "10") int size){
         return new ResponseEntity<>(userService.listUser(page, size), HttpStatus.OK);
     }
 }
