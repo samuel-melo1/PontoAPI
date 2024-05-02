@@ -2,8 +2,6 @@ package com.eletronico.pontoapi.core.dto;
 
 import com.eletronico.pontoapi.core.enums.UserRole;
 import lombok.Data;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.io.Serializable;
 

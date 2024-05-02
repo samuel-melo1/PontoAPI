@@ -55,12 +55,14 @@ public class UserService {
         });
         return pagedDto;
     }
+/*
     public Optional<User> findByEmail(String email) {
         Optional<User> userExist = Optional.ofNullable(userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
 
         return userRepository.findUserByEmail(String.valueOf(userExist));
     }
+*/
 
     public StandardListUserDTO entityToDo(User user, Pageable pageable, Page<User> page) {
         StandardListUserDTO standardListUserDTO = new StandardListUserDTO();
