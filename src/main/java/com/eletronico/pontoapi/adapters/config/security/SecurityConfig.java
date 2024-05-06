@@ -33,8 +33,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/api/v1/createuser").hasAuthority("GESTOR")
                         .requestMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/v1/users").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/users").hasAuthority("GESTOR")
                         .requestMatchers(HttpMethod.POST,"/api/auth/forgot-password").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/delete/{id}").hasAuthority("GESTOR")
                         .requestMatchers(AUTH_WHITELIST).hasRole("ADMINISTRADOR")
                         .anyRequest().authenticated()
                 )
