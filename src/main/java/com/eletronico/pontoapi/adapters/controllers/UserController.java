@@ -19,19 +19,23 @@ public class UserController {
 
     private UserService userService;
 
-    public UserController(UserService userService){
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping("/createuser")
-    public ResponseEntity<Object> saveUser(@RequestBody UserDTO userDTO){
+    public ResponseEntity<Object> saveUser(@RequestBody UserDTO userDTO) {
         userService.saveUser(userDTO);
         return ResponseHandler.responseCreated("Created Sucess", HttpStatus.OK);
     }
-
     @GetMapping("/users")
     public ResponseEntity<Page<StandardListUserDTO>> getUserList(@RequestParam(name = "page", defaultValue = "0") int page,
-                                                                 @RequestParam(name = "size", defaultValue = "10") int size){
+                                                                 @RequestParam(name = "size", defaultValue = "10") int size) {
         return new ResponseEntity<>(userService.listUser(page, size), HttpStatus.OK);
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> saveUser(@PathVariable("id") Integer id) {
+        userService.delete(id);
+        return ResponseHandler.responseDelete("Delete Sucess", HttpStatus.OK);
     }
 }

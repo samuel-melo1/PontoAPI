@@ -28,8 +28,12 @@ public class User  implements UserDetails, Serializable {
     private String name;
     private String password;
     private String telefone;
+    @Column(name = "cpf", length = 14)
+    private String cpf;
     private Boolean status;
     private UserRole userRole;
+    @OneToOne
+    private Position position;
 
     @Override
     @JsonIgnore

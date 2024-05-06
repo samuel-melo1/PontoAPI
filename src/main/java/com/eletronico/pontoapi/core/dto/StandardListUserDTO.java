@@ -7,11 +7,10 @@ import java.io.Serializable;
 
 @Data
 public class StandardListUserDTO implements Serializable {
+    private Integer id;
     private String email;
     private String telefone;
     private String name;
+    private String cpf;
     private UserRole userRole;
-    private Integer currentPage;
-    private Integer pageSize;
-    private Long totalElements;
 }

@@ -4,7 +4,6 @@ import com.eletronico.pontoapi.adapters.database.UserRepository;
 import com.eletronico.pontoapi.core.domain.User;
 import com.eletronico.pontoapi.core.dto.StandardListUserDTO;
 import com.eletronico.pontoapi.core.dto.UserDTO;
-import com.eletronico.pontoapi.core.enums.UserExceptionStatusError;
 import com.eletronico.pontoapi.core.exceptions.UserAlredyExistException;
 import com.eletronico.pontoapi.core.exceptions.UserNotFoundException;
 import jakarta.transaction.Transactional;
@@ -13,14 +12,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
-
 import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.ALREDY_EXIST;
 import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.NOT_EXIST;
 
 @Service
-public class UserService {
+public class UserService  {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
 
@@ -29,7 +26,6 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
 
     }
-
     @Transactional
     public User saveUser(UserDTO userDTO) {
 
@@ -42,6 +38,8 @@ public class UserService {
                 .userRole(userDTO.userRole())
                 .telefone(userDTO.telefone())
                 .status(true)
+                .cpf(userDTO.cpf())
+                .position(userDTO.position())
                 .name(userDTO.name()).build();
 
         return userRepository.save(newUser);
@@ -50,29 +48,32 @@ public class UserService {
         Pageable pages = PageRequest.of(page, pageSize);
         Page<User> pagedResult = userRepository.findAll(pages);
         Page<StandardListUserDTO> pagedDto = pagedResult.map(entity -> {
-            StandardListUserDTO dto = entityToDo(entity, pages, pagedResult);
+            StandardListUserDTO dto = entityToDo(entity);
             return dto;
         });
         return pagedDto;
     }
-/*
     public Optional<User> findByEmail(String email) {
         Optional<User> userExist = Optional.ofNullable(userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
 
         return userRepository.findUserByEmail(String.valueOf(userExist));
     }
-*/
 
-    public StandardListUserDTO entityToDo(User user, Pageable pageable, Page<User> page) {
+    public void delete(Integer id){
+        Optional<User> userExist = Optional.ofNullable(userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
+
+        userRepository.delete(userExist.get());
+    }
+    public StandardListUserDTO entityToDo(User user) {
         StandardListUserDTO standardListUserDTO = new StandardListUserDTO();
-        standardListUserDTO.setName(user.getEmail());
+        standardListUserDTO.setId(user.getId_user());
+        standardListUserDTO.setName(user.getName());
         standardListUserDTO.setTelefone(user.getTelefone());
         standardListUserDTO.setEmail(user.getEmail());
         standardListUserDTO.setUserRole(user.getUserRole());
-        standardListUserDTO.setCurrentPage(pageable.getPageNumber() + 1);
-        standardListUserDTO.setPageSize(pageable.getPageSize());
-        standardListUserDTO.setTotalElements(page.getTotalElements());
+        standardListUserDTO.setCpf(user.getCpf());
         return standardListUserDTO;
     }
 }
