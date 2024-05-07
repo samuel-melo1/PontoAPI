@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/v1")
+@RequestMapping(value = "/api/v1/user")
 public class UserController {
 
     private UserService userService;
@@ -23,12 +23,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/createuser")
+    @PostMapping("/create-user")
     public ResponseEntity<Object> saveUser(@RequestBody UserDTO userDTO) {
         userService.saveUser(userDTO);
         return ResponseHandler.responseCreated("Created Sucess", HttpStatus.OK);
     }
-    @GetMapping("/users")
+    @GetMapping("/list-users")
     public ResponseEntity<Page<StandardListUserDTO>> getUserList(@RequestParam(name = "page", defaultValue = "0") int page,
                                                                  @RequestParam(name = "size", defaultValue = "10") int size) {
         return new ResponseEntity<>(userService.listUser(page, size), HttpStatus.OK);
@@ -37,5 +37,9 @@ public class UserController {
     public ResponseEntity<Object> saveUser(@PathVariable("id") Integer id) {
         userService.delete(id);
         return ResponseHandler.responseDelete("Delete Sucess", HttpStatus.OK);
+    }
+    @PostMapping("/update")
+    public ResponseEntity<Object> update(@RequestBody UserDTO userDTO) {
+        return ResponseHandler.responseUpdate(userService.update(userDTO), HttpStatus.OK);
     }
 }
