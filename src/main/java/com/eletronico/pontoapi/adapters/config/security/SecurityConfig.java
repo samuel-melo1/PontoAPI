@@ -19,8 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-
     private SecurityFilter securityFilter;
     public SecurityConfig(SecurityFilter securityFilter){
         this.securityFilter = securityFilter;
@@ -31,17 +29,17 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/api/v1/createuser").hasAuthority("GESTOR")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/user/create-user").hasAuthority("GESTOR")
                         .requestMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/v1/users").hasAuthority("GESTOR")
+                        .requestMatchers(HttpMethod.GET,"/api/v1/user/list-users").hasAuthority("GESTOR")
                         .requestMatchers(HttpMethod.POST,"/api/auth/forgot-password").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/delete/{id}").hasAuthority("GESTOR")
-                        .requestMatchers(AUTH_WHITELIST).hasRole("ADMINISTRADOR")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/user/delete/{id}").hasAuthority("GESTOR")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/position/list-positions").hasAuthority("GESTOR")
+                        .requestMatchers(AUTH_WHITELIST).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
-
     }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -51,13 +49,11 @@ public class SecurityConfig {
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
-
     public static final String[] AUTH_WHITELIST = {
             "/api/v1/auth/**",
             "/v3/api-docs/**",
             "/v3/api-docs.yaml",
             "/swagger-ui.html",
             "/swagger-ui/**"
-
     };
 }
