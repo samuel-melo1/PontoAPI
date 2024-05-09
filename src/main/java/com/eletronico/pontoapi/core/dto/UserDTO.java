@@ -2,6 +2,19 @@ package com.eletronico.pontoapi.core.dto;
 
 import com.eletronico.pontoapi.core.domain.Position;
 import com.eletronico.pontoapi.core.enums.UserRole;
+import lombok.*;
 
-public record UserDTO(String email, String password, String telefone, String cpf, String name, Position position,  UserRole userRole) {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserDTO {
+    private String email;
+    private String password;
+    private String telefone;
+    private String cpf;
+    private String name;
+    private Position position;
+    private UserRole userRole;
+
 }
