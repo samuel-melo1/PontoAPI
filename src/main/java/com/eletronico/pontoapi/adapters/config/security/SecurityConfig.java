@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/api/v1/user/list-users").hasAuthority("GESTOR")
                         .requestMatchers(HttpMethod.POST,"/api/auth/forgot-password").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/user/delete/{id}").hasAuthority("GESTOR")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/user/update").hasAuthority("GESTOR")
                         .requestMatchers(HttpMethod.GET, "/api/v1/position/list-positions").hasAuthority("GESTOR")
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .anyRequest().authenticated()
