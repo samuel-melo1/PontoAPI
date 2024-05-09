@@ -1,5 +1,6 @@
 package com.eletronico.pontoapi.adapters.controllers;
 
+import com.eletronico.pontoapi.core.domain.Position;
 import com.eletronico.pontoapi.core.dto.PositionDTO;
 import com.eletronico.pontoapi.core.services.PositionService;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ public class PositionController {
         this.service = service;
     }
     @GetMapping("/list-positions")
-    public ResponseEntity<List<PositionDTO>> list(){
+    public ResponseEntity<List<Position>> list(){
         return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 }

@@ -38,7 +38,7 @@ public class UserController {
         userService.delete(id);
         return ResponseHandler.responseDelete("Delete Sucess", HttpStatus.OK);
     }
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<Object> update(@RequestBody UserDTO userDTO) {
         return ResponseHandler.responseUpdate(userService.update(userDTO), HttpStatus.OK);
     }
