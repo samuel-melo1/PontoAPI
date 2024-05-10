@@ -1,6 +1,6 @@
 //package com.eletronico.pontoapi.core.password;
 //
-//import com.eletronico.pontoapi.core.domain.User;
+//import com.eletronico.pontoapi.core.user.domain.User;
 //import jakarta.persistence.*;
 //import lombok.*;
 //

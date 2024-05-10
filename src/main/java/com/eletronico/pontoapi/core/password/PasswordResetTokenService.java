@@ -1,9 +1,9 @@
 //package com.eletronico.pontoapi.core.password;
 //
-//import com.eletronico.pontoapi.adapters.database.UserRepository;
-//import com.eletronico.pontoapi.core.domain.User;
-//import com.eletronico.pontoapi.core.dto.PasswordResetRequestDTO;
-//import com.eletronico.pontoapi.core.services.UserService;
+//import com.eletronico.pontoapi.adapters.database.user.UserRepository;
+//import com.eletronico.pontoapi.core.user.domain.User;
+//import com.eletronico.pontoapi.core.password.dto.PasswordResetRequestDTO;
+//import com.eletronico.pontoapi.core.user.services.UserService;
 //import jakarta.mail.MessagingException;
 //import jakarta.mail.internet.MimeMessage;
 //import jakarta.transaction.Transactional;

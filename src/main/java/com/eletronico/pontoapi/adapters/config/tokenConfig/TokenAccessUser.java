@@ -3,7 +3,7 @@ package com.eletronico.pontoapi.adapters.config.tokenConfig;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
-import com.eletronico.pontoapi.core.domain.User;
+import com.eletronico.pontoapi.core.user.domain.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
