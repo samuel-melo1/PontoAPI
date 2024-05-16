@@ -5,6 +5,7 @@ import com.eletronico.pontoapi.core.sector.domain.Sector;
 import com.eletronico.pontoapi.core.sector.dto.SectorDTO;
 import com.eletronico.pontoapi.core.sector.services.SectorService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +15,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/sector")
 public class SectorController {
-
+    @Autowired
     private SectorService service;
-
-    public SectorController(SectorService service) {
-        this.service = service;
-    }
     @PostMapping("/create")
     public ResponseEntity<Object> create(@RequestBody @Valid SectorDTO dto) {
         service.create(dto);
