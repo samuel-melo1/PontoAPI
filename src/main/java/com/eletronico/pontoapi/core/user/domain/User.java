@@ -1,6 +1,7 @@
 package com.eletronico.pontoapi.core.user.domain;
 
 import com.eletronico.pontoapi.core.position.domain.Position;
+import com.eletronico.pontoapi.core.role.domain.Role;
 import com.eletronico.pontoapi.core.sector.domain.Sector;
 import com.eletronico.pontoapi.core.user.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,8 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @NoArgsConstructor
@@ -26,59 +26,62 @@ public class User implements UserDetails, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_user;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
     private String name;
     private String password;
     private String telefone;
-    @Column(name = "cpf", length = 14)
+    @Column(name = "cpf", length = 14, unique = true)
     private String cpf;
     private Boolean status;
     private UserRole userRole;
+    private Boolean accountNonExpired;
+    private Boolean accountNonLocked;
+    private Boolean credentialsNonExpired;
+    private Boolean enabled;
     @ManyToOne
     @JoinColumn(name = "position_id")
     private Position position;
     @ManyToOne
     @JoinColumn(name = "sector_id")
     private Sector sector;
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "tb_users_role",
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> permissions = new HashSet<>();
+    public List<String> getRoles(){
+        List<String> roles = new ArrayList<>();
+        for (Role permission : permissions){
+            roles.add(permission.getName());
+        }
+        return roles;
+    }
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.userRole == UserRole.ADMINISTRADOR) {
-            return List.of(new SimpleGrantedAuthority("ADMINISTRADOR"), new SimpleGrantedAuthority("GESTOR"), new SimpleGrantedAuthority("COLABORADOR"));
-        } else if (this.userRole == UserRole.GESTOR) {
-            return List.of(new SimpleGrantedAuthority("GESTOR"), new SimpleGrantedAuthority("COLABORADOR"));
-        } else {
-            return List.of(new SimpleGrantedAuthority("COLABORADOR"));
-        }
-    }
-
+      return this.permissions;
+     }
     @Override
     public String getUsername() {
         return email;
     }
-
     @Override
     public String getPassword() {
         return password;
     }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
-
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
-
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
     @Override
     public boolean isEnabled() {
         return true;

@@ -5,6 +5,8 @@ import com.eletronico.pontoapi.core.sector.domain.Sector;
 import com.eletronico.pontoapi.core.user.enums.UserRole;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,5 +20,6 @@ public class UserDTO {
     private Position position;
     private Sector sector;
     private UserRole userRole;
+    private List<String> roles;
 
 }

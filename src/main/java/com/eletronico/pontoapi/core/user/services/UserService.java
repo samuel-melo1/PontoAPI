@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,16 +28,13 @@ import static com.eletronico.pontoapi.core.user.enums.UserExceptionStatusError.N
 @Service
 @Slf4j
 public class UserService {
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
     private ModelMapper mapper;
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class.getName());
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper mapper) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.mapper = mapper;
-    }
 
     @Transactional
     public UserDTO saveUser(UserDTO userDTO) {
@@ -70,7 +68,7 @@ public class UserService {
         });
         return pagedDto;
     }
-    public Optional<UserDTO> findByEmail(String email) {
+    public Optional<UserDTO> findUserByEmail(String email) {
         LOG.info("find users by email");
         Optional<User> userExist = Optional.ofNullable(userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
@@ -100,4 +98,6 @@ public class UserService {
 
         return MapperDTO.parseObject(userRepository.save(entity), EditListUserDTO.class);
     }
+
+
 }
