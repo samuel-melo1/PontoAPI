@@ -18,8 +18,10 @@ public class UserController {
     @Autowired
     private UserService userService;
     @PostMapping("/create-user")
-    public ResponseEntity<UserDTO> saveUser(@RequestBody UserDTO userDTO) {
-        return new ResponseEntity<>(userService.saveUser(userDTO), HttpStatus.CREATED);
+    public ResponseEntity<Object> saveUser(@RequestBody UserDTO userDTO) {
+       //  return new ResponseEntity<>(userService.saveUser(userDTO), HttpStatus.CREATED)
+        userService.saveUser(userDTO);
+        return ResponseHandler.responseCreated("Created sucess", HttpStatus.OK);
     }
     @GetMapping("/list-users")
     public ResponseEntity<Page<StandardListUserDTO>> getUserList(@RequestParam(name = "page", defaultValue = "0") int page,
