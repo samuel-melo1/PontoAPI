@@ -14,6 +14,10 @@ public class ClienteService implements UserDetailsService {
     private UserRepository repository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findByEmail(username);
+       var user =  repository.findByEmail(username);
+       if (user == null){
+            throw new UsernameNotFoundException("Username " + username + " Not Found!");
+       }
+       return user;
     }
 }
