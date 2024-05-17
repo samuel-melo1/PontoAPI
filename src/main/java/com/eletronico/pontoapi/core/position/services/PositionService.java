@@ -8,6 +8,7 @@ import com.eletronico.pontoapi.utils.mapper.MapperDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import static com.eletronico.pontoapi.core.position.enums.PositionExceptionStatusError.ALREDY_EXIST;
@@ -17,12 +18,9 @@ import static com.eletronico.pontoapi.core.position.enums.PositionExceptionStatu
 @Slf4j
 public class PositionService {
     private static final Logger LOG = LoggerFactory.getLogger(PositionService.class.getName());
+
+    @Autowired
     private PositionRepository repository;
-
-    public PositionService(PositionRepository repository) {
-        this.repository = repository;
-    }
-
     public PositionDTO create(PositionDTO dto) {
         LOG.info("creating positions");
         var entity = repository.findById(dto.getCode());
