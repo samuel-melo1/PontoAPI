@@ -52,7 +52,8 @@ public class UserService {
                 .cpf(userDTO.getCpf())
                 .position(userDTO.getPosition())
                 .sector(userDTO.getSector())
-                .name(userDTO.getName()).build();
+                .name(userDTO.getName())
+                .permissions(userDTO.getRole()).build();
 
         return mapper.map(userRepository.save(newUser), UserDTO.class);
     }
@@ -68,12 +69,12 @@ public class UserService {
         });
         return pagedDto;
     }
-    public Optional<UserDTO> findUserByEmail(String email) {
+    public Optional<User> findUserByEmail(String email) {
         LOG.info("find users by email");
         Optional<User> userExist = Optional.ofNullable(userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
 
-        return Optional.ofNullable(MapperDTO.parseObject(userExist, UserDTO.class));
+        return Optional.of(userExist.get());
     }
     public void delete(Integer id) {
         LOG.info("delete users by id");
@@ -85,16 +86,16 @@ public class UserService {
     public EditListUserDTO update(EditListUserDTO dto) {
         LOG.info("updating users");
 
-        User entity = userRepository.findUserByEmail(dto.email())
+        User entity = userRepository.findUserByEmail(dto.getEmail())
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST));
 
-        entity.setEmail(dto.email());
-        entity.setName(dto.name());
-        entity.setTelefone(dto.telefone());
-        entity.setCpf(dto.cpf());
-        entity.setUserRole(dto.userRole());
-        entity.setPosition(dto.position());
-        entity.setSector(dto.sector());
+        entity.setEmail(dto.getEmail());
+        entity.setName(dto.getName());
+        entity.setTelefone(dto.getTelefone());
+        entity.setCpf(dto.getCpf());
+        entity.setPosition(dto.getPosition());
+        entity.setSector(dto.getSector());
+        entity.setPermissions(dto.getPermissions());
 
         return MapperDTO.parseObject(userRepository.save(entity), EditListUserDTO.class);
     }

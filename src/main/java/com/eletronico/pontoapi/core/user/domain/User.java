@@ -34,6 +34,7 @@ public class User implements UserDetails, Serializable {
     @Column(name = "cpf", length = 14, unique = true)
     private String cpf;
     private Boolean status;
+    @JsonIgnore
     private UserRole userRole;
     private Boolean accountNonExpired;
     private Boolean accountNonLocked;
@@ -49,7 +50,7 @@ public class User implements UserDetails, Serializable {
     @JoinTable(name = "tb_users_role",
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> permissions = new HashSet<>();
+    private List<Role> permissions = new ArrayList<>();
     public List<String> getRoles(){
         List<String> roles = new ArrayList<>();
         for (Role permission : permissions){
