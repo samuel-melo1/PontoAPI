@@ -1,11 +1,11 @@
 package com.eletronico.pontoapi.adapters.controllers.user;
 
 import com.eletronico.pontoapi.adapters.response.standardResponse.ResponseHandler;
-import com.eletronico.pontoapi.core.user.domain.User;
 import com.eletronico.pontoapi.core.user.dto.EditListUserDTO;
 import com.eletronico.pontoapi.core.user.dto.StandardListUserDTO;
 import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import com.eletronico.pontoapi.core.user.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -18,8 +18,7 @@ public class UserController {
     @Autowired
     private UserService userService;
     @PostMapping("/create-user")
-    public ResponseEntity<Object> saveUser(@RequestBody UserDTO userDTO) {
-       //  return new ResponseEntity<>(userService.saveUser(userDTO), HttpStatus.CREATED)
+    public ResponseEntity<Object> saveUser(@RequestBody @Valid  UserDTO userDTO) {
         userService.saveUser(userDTO);
         return ResponseHandler.responseCreated("Created sucess", HttpStatus.OK);
     }
@@ -34,7 +33,7 @@ public class UserController {
         return ResponseHandler.responseDelete("Delete Sucess", HttpStatus.OK);
     }
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody EditListUserDTO dto) {
+    public ResponseEntity<Object> update(@RequestBody @Valid EditListUserDTO dto) {
         return ResponseHandler.responseUpdate(userService.update(dto), HttpStatus.OK);
     }
 }
