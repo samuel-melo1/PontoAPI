@@ -16,6 +16,7 @@ public class StandardListUserDTO implements Serializable {
     private String email;
     private String telefone;
     private String name;
+    private Boolean status;
     private String cpf;
     private Position position;
     private Sector sector;
