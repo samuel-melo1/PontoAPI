@@ -1,10 +1,13 @@
 package com.eletronico.pontoapi.core.user.services;
 
 import com.eletronico.pontoapi.adapters.database.user.UserRepository;
+import com.eletronico.pontoapi.core.role.domain.Role;
 import com.eletronico.pontoapi.core.user.domain.User;
 import com.eletronico.pontoapi.core.user.dto.EditListUserDTO;
 import com.eletronico.pontoapi.core.user.dto.StandardListUserDTO;
 import com.eletronico.pontoapi.core.user.dto.UserDTO;
+import com.eletronico.pontoapi.core.user.enums.UserRole;
+import com.eletronico.pontoapi.core.user.exceptions.NotPermitedDeleteAdmException;
 import com.eletronico.pontoapi.core.user.exceptions.UserAlredyExistException;
 import com.eletronico.pontoapi.core.user.exceptions.UserNotFoundException;
 import com.eletronico.pontoapi.adapters.utils.mapper.MapperDTO;
@@ -20,10 +23,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
-import static com.eletronico.pontoapi.core.user.enums.UserExceptionStatusError.ALREDY_EXIST;
-import static com.eletronico.pontoapi.core.user.enums.UserExceptionStatusError.NOT_EXIST;
+import static com.eletronico.pontoapi.core.user.enums.UserExceptionStatusError.*;
 
 @Service
 @Slf4j
@@ -82,6 +85,11 @@ public class UserService {
         Optional<User> userExist = Optional.ofNullable(userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
 
+        for (String roles : userExist.get().getRoles()){
+            if(Objects.equals(roles, UserRole.ADMINISTRADOR.name())){
+                throw new NotPermitedDeleteAdmException(NOT_PERMITED_DELETE);
+            }
+        }
         userRepository.delete(userExist.get());
     }
     public EditListUserDTO update(EditListUserDTO dto) {

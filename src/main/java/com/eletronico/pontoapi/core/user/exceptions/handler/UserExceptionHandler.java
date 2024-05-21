@@ -1,5 +1,6 @@
 package com.eletronico.pontoapi.core.user.exceptions.handler;
 
+import com.eletronico.pontoapi.core.user.exceptions.NotPermitedDeleteAdmException;
 import com.eletronico.pontoapi.core.user.exceptions.UserAlredyExistException;
 import com.eletronico.pontoapi.core.user.exceptions.UserNotFoundException;
 import com.eletronico.pontoapi.adapters.utils.standarderror.RestErrorMessage;
@@ -39,17 +40,22 @@ public class UserExceptionHandler  {
         return ResponseEntity.status(exception.getStatus()).body(err);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, List<String>>> handleValidationErrors(MethodArgumentNotValidException ex) {
-        List<String> errors = ex.getBindingResult().getFieldErrors()
-                .stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
-        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(NotPermitedDeleteAdmException.class)
+    private ResponseEntity<RestErrorMessage> userNotFoundExistHandler(NotPermitedDeleteAdmException exception, HttpServletRequest request) {
+        RestErrorMessage err = new RestErrorMessage(Instant.now(), exception.getHttpStatus().value(), exception.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(exception.getHttpStatus().value()).body(err);
     }
 
-    private Map<String, List<String>> getErrorsMap(List<String> errors) {
-        Map<String, List<String>> errorResponse = new HashMap<>();
-        errorResponse.put("errors", errors);
-        return errorResponse;
-    }
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    public ResponseEntity<Map<String, List<String>>> handleValidationErrors(MethodArgumentNotValidException ex) {
+//        List<String> errors = ex.getBindingResult().getFieldErrors()
+//                .stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
+//        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+//    }
+//    private Map<String, List<String>> getErrorsMap(List<String> errors) {
+//        Map<String, List<String>> errorResponse = new HashMap<>();
+//        errorResponse.put("errors", errors);
+//        return errorResponse;
+//    }
 
 }
