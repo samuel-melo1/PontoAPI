@@ -1,4 +1,4 @@
-package com.eletronico.pontoapi.utils.standarderror;
+package com.eletronico.pontoapi.adapters.utils.standarderror;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

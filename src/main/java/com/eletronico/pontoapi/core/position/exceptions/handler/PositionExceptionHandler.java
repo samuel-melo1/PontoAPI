@@ -2,7 +2,7 @@ package com.eletronico.pontoapi.core.position.exceptions.handler;
 
 import com.eletronico.pontoapi.core.position.exceptions.PositionAlredyExistException;
 import com.eletronico.pontoapi.core.position.exceptions.PositionNotFoundException;
-import com.eletronico.pontoapi.utils.standarderror.RestErrorMessage;
+import com.eletronico.pontoapi.adapters.utils.standarderror.RestErrorMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

@@ -5,7 +5,7 @@ import com.eletronico.pontoapi.core.sector.domain.Sector;
 import com.eletronico.pontoapi.core.sector.dto.SectorDTO;
 import com.eletronico.pontoapi.core.sector.exceptions.SectionAlredyExistException;
 import com.eletronico.pontoapi.core.user.services.UserService;
-import com.eletronico.pontoapi.utils.mapper.MapperDTO;
+import com.eletronico.pontoapi.adapters.utils.mapper.MapperDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;

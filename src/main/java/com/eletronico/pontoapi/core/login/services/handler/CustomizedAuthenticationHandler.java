@@ -1,8 +1,7 @@
 package com.eletronico.pontoapi.core.login.services.handler;
 
 import com.eletronico.pontoapi.core.login.exceptions.InvalidJwtAuthenticationException;
-import com.eletronico.pontoapi.core.user.exceptions.UserNotFoundException;
-import com.eletronico.pontoapi.utils.standarderror.RestErrorMessage;
+import com.eletronico.pontoapi.adapters.utils.standarderror.RestErrorMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

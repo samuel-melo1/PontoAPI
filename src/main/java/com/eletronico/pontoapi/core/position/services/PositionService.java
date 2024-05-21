@@ -4,7 +4,7 @@ import com.eletronico.pontoapi.adapters.database.position.PositionRepository;
 import com.eletronico.pontoapi.core.position.domain.Position;
 import com.eletronico.pontoapi.core.position.dto.PositionDTO;
 import com.eletronico.pontoapi.core.position.exceptions.PositionAlredyExistException;
-import com.eletronico.pontoapi.utils.mapper.MapperDTO;
+import com.eletronico.pontoapi.adapters.utils.mapper.MapperDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

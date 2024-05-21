@@ -2,7 +2,7 @@ package com.eletronico.pontoapi.core.sector.exceptions.handler;
 
 import com.eletronico.pontoapi.core.sector.exceptions.SectionAlredyExistException;
 import com.eletronico.pontoapi.core.sector.exceptions.SectionNotFoundException;
-import com.eletronico.pontoapi.utils.standarderror.RestErrorMessage;
+import com.eletronico.pontoapi.adapters.utils.standarderror.RestErrorMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

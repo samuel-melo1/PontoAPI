@@ -1,4 +1,4 @@
-package com.eletronico.pontoapi.utils.mapper;
+package com.eletronico.pontoapi.adapters.utils.mapper;
 
 import org.modelmapper.ModelMapper;
 

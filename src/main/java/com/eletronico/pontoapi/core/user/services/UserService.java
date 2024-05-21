@@ -7,7 +7,7 @@ import com.eletronico.pontoapi.core.user.dto.StandardListUserDTO;
 import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import com.eletronico.pontoapi.core.user.exceptions.UserAlredyExistException;
 import com.eletronico.pontoapi.core.user.exceptions.UserNotFoundException;
-import com.eletronico.pontoapi.utils.mapper.MapperDTO;
+import com.eletronico.pontoapi.adapters.utils.mapper.MapperDTO;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -28,6 +28,7 @@ import static com.eletronico.pontoapi.core.user.enums.UserExceptionStatusError.N
 @Service
 @Slf4j
 public class UserService {
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
