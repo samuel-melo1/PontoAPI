@@ -18,12 +18,18 @@ public class SectorController {
     @Autowired
     private SectorService service;
     @PostMapping("/create")
-    public ResponseEntity<Object> create(@RequestBody @Valid SectorDTO dto) {
-        service.create(dto);
+    public ResponseEntity<Object> create(@RequestBody @Valid List<Sector> sectors) {
+        service.create(sectors);
         return ResponseHandler.responseCreated("Created Sucess", HttpStatus.OK);
     }
     @GetMapping("/list-sectors")
     public ResponseEntity<List<Sector>> list(){
         return ResponseEntity.ok(service.list());
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> saveUser(@PathVariable("id") Integer id) {
+        service.delete(id);
+        return ResponseHandler.responseDelete("Delete Sucess", HttpStatus.OK);
     }
 }

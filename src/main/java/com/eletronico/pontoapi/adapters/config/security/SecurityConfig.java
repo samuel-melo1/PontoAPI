@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/api/v1/user/list-users").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
                         .requestMatchers(HttpMethod.POST,"/api/auth/forgot-password").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/user/delete/{id}").hasAnyAuthority("ADMINISTRADOR","GESTOR")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/sector/delete/{id}").hasAnyAuthority("ADMINISTRADOR","GESTOR")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/user/update").hasAnyAuthority("ADMINISTRADOR","GESTOR")
                         .requestMatchers(HttpMethod.GET, "/api/v1/position/list-positions").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
                         .requestMatchers(HttpMethod.POST, "/api/v1/position/create").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
