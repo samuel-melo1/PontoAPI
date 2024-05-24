@@ -5,6 +5,7 @@ import com.eletronico.pontoapi.core.role.domain.Role;
 import com.eletronico.pontoapi.core.role.dto.RoleDTO;
 import com.eletronico.pontoapi.core.sector.exceptions.SectionAlredyExistException;
 import com.eletronico.pontoapi.adapters.utils.mapper.MapperDTO;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class RoleService {
 
     @Autowired
     private RoleRepository repository;
+    @Transactional
     public RoleDTO create(RoleDTO dto){
 
         var entity = repository.findById(dto.getCode());

@@ -18,8 +18,8 @@ public class PositionController {
     @Autowired
     private PositionService service;
     @PostMapping("/create")
-    public ResponseEntity<Object> create(@RequestBody @Valid PositionDTO dto) {
-        service.create(dto);
+    public ResponseEntity<Object> create(@RequestBody @Valid List<Position> positions) {
+        service.create(positions);
         return ResponseHandler.responseCreated("Create Sucess", HttpStatus.CREATED);
     }
     @GetMapping("/list-positions")

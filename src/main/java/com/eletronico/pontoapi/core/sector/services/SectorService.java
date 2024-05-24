@@ -10,12 +10,14 @@ import com.eletronico.pontoapi.core.user.exceptions.NotPermitedDeleteAdmExceptio
 import com.eletronico.pontoapi.core.user.exceptions.UserNotFoundException;
 import com.eletronico.pontoapi.core.user.services.UserService;
 import com.eletronico.pontoapi.adapters.utils.mapper.MapperDTO;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -32,17 +34,17 @@ public class SectorService {
     private SectorRepository repository;
     @Autowired
     private ModelMapper mapper;
+
+    @Transactional
     public SectorDTO create(List<Sector> sectors) {
         LOG.info("creating sector");
-        var saveSector = repository.saveAll(sectors);
-
-        for(Sector sector: saveSector){
-            var entity =  repository.findById(sector.getId_sector());
-            if (entity.isPresent()) {
+        for (Sector sector : sectors) {
+            var entity = repository.findByName(sector.getName());
+            if (entity != null) {
                 throw new SectionAlredyExistException(ALREDY_EXIST);
             }
         }
-        return MapperDTO.parseObject(saveSector, SectorDTO.class);
+        return MapperDTO.parseObject(repository.saveAll(sectors), SectorDTO.class);
     }
 
     public List<Sector> list() {
@@ -50,6 +52,7 @@ public class SectorService {
         return repository.findAll();
     }
 
+    @Transactional
     public void delete(Integer id) {
         LOG.info("delete sector by id");
         Optional<Sector> userExist = Optional.ofNullable(repository.findById(id)

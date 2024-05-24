@@ -3,8 +3,14 @@ package com.eletronico.pontoapi.core.position.services;
 import com.eletronico.pontoapi.adapters.database.position.PositionRepository;
 import com.eletronico.pontoapi.core.position.domain.Position;
 import com.eletronico.pontoapi.core.position.dto.PositionDTO;
+import com.eletronico.pontoapi.core.position.enums.PositionExceptionStatusError;
 import com.eletronico.pontoapi.core.position.exceptions.PositionAlredyExistException;
 import com.eletronico.pontoapi.adapters.utils.mapper.MapperDTO;
+import com.eletronico.pontoapi.core.sector.domain.Sector;
+import com.eletronico.pontoapi.core.sector.dto.SectorDTO;
+import com.eletronico.pontoapi.core.sector.enums.SectionExceptionStatusError;
+import com.eletronico.pontoapi.core.sector.exceptions.SectionAlredyExistException;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,15 +27,16 @@ public class PositionService {
 
     @Autowired
     private PositionRepository repository;
-    public PositionDTO create(PositionDTO dto) {
-        LOG.info("creating positions");
-        var entity = repository.findById(dto.getCode());
-        if (entity.isPresent()) {
-            throw new PositionAlredyExistException(ALREDY_EXIST);
+    @Transactional
+    public PositionDTO create(List<Position> positions) {
+        LOG.info("creating sector");
+        for (Position position : positions) {
+            var entity = repository.findByName(position.getName());
+            if (entity != null) {
+                throw new PositionAlredyExistException(PositionExceptionStatusError.ALREDY_EXIST);
+            }
         }
-        Position newPosition = Position.builder()
-                .name(dto.getName()).build();
-        return MapperDTO.parseObject(repository.save(newPosition), PositionDTO.class);
+        return MapperDTO.parseObject(repository.saveAll(positions), PositionDTO.class);
     }
     public List<Position> findAll() {
         LOG.info("Finding all people!");

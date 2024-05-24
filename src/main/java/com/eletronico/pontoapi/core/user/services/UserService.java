@@ -31,7 +31,6 @@ import static com.eletronico.pontoapi.core.user.enums.UserExceptionStatusError.*
 @Service
 @Slf4j
 public class UserService {
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -80,6 +79,7 @@ public class UserService {
 
         return Optional.of(userExist.get());
     }
+    @Transactional
     public void delete(Integer id) {
         LOG.info("delete users by id");
         Optional<User> userExist = Optional.ofNullable(userRepository.findById(id)
