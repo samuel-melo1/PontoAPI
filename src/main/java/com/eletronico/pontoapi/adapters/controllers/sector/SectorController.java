@@ -28,7 +28,7 @@ public class SectorController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> saveUser(@PathVariable("id") Integer id) {
+    public ResponseEntity<Object> delete(@PathVariable("id") Integer id) {
         service.delete(id);
         return ResponseHandler.responseDelete("Delete Sucess", HttpStatus.OK);
     }

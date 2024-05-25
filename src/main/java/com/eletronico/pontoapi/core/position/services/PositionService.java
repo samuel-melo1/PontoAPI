@@ -6,10 +6,8 @@ import com.eletronico.pontoapi.core.position.dto.PositionDTO;
 import com.eletronico.pontoapi.core.position.enums.PositionExceptionStatusError;
 import com.eletronico.pontoapi.core.position.exceptions.PositionAlredyExistException;
 import com.eletronico.pontoapi.adapters.utils.mapper.MapperDTO;
-import com.eletronico.pontoapi.core.sector.domain.Sector;
-import com.eletronico.pontoapi.core.sector.dto.SectorDTO;
-import com.eletronico.pontoapi.core.sector.enums.SectionExceptionStatusError;
-import com.eletronico.pontoapi.core.sector.exceptions.SectionAlredyExistException;
+import com.eletronico.pontoapi.core.position.exceptions.PositionNotFoundException;
+
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -17,8 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import static com.eletronico.pontoapi.core.position.enums.PositionExceptionStatusError.ALREDY_EXIST;
-
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -41,5 +38,14 @@ public class PositionService {
     public List<Position> findAll() {
         LOG.info("Finding all people!");
         return repository.findAll();
+    }
+
+    @Transactional
+    public void delete(Integer id) {
+        LOG.info("delete position by id");
+        Optional<Position> positonExist = Optional.ofNullable(repository.findById(id)
+                .orElseThrow(() -> new PositionNotFoundException(PositionExceptionStatusError.NOT_FOUND_POSITION)));
+
+        repository.delete(positonExist.get());
     }
 }
