@@ -8,11 +8,16 @@ import com.eletronico.pontoapi.core.position.exceptions.PositionAlredyExistExcep
 import com.eletronico.pontoapi.adapters.utils.mapper.MapperDTO;
 import com.eletronico.pontoapi.core.position.exceptions.PositionNotFoundException;
 
+import com.eletronico.pontoapi.core.user.domain.User;
+import com.eletronico.pontoapi.core.user.dto.StandardListUserDTO;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -35,11 +40,15 @@ public class PositionService {
         }
         return MapperDTO.parseObject(repository.saveAll(positions), PositionDTO.class);
     }
-    public List<Position> findAll() {
-        LOG.info("Finding all people!");
-        return repository.findAll();
-    }
+    public Page<PositionDTO> findAll(Integer page, Integer pageSize) {
+        Pageable pages = PageRequest.of(page, pageSize);
+        Page<Position> pagedResult = repository.findAll(pages);
 
+        Page<PositionDTO> pagedDto = pagedResult.map(entity -> {
+            return MapperDTO.parseObject(entity, PositionDTO.class);
+        });
+        return pagedDto;
+    }
     @Transactional
     public void delete(Integer id) {
         LOG.info("delete position by id");

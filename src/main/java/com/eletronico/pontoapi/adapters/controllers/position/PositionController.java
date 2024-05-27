@@ -6,6 +6,7 @@ import com.eletronico.pontoapi.core.position.dto.PositionDTO;
 import com.eletronico.pontoapi.core.position.services.PositionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,9 @@ public class PositionController {
         return ResponseHandler.responseCreated("Create Sucess", HttpStatus.CREATED);
     }
     @GetMapping("/list-positions")
-    public ResponseEntity<List<Position>> list() {
-        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+    public ResponseEntity<Page<PositionDTO>> list(@RequestParam(name = "page", defaultValue = "0") int page,
+                                               @RequestParam(name = "size", defaultValue = "10") int size) {
+        return new ResponseEntity<>(service.findAll(page, size), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

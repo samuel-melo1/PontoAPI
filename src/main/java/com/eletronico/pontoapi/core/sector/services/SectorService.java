@@ -1,6 +1,8 @@
 package com.eletronico.pontoapi.core.sector.services;
 
 import com.eletronico.pontoapi.adapters.database.sector.SectorRepository;
+import com.eletronico.pontoapi.core.position.domain.Position;
+import com.eletronico.pontoapi.core.position.dto.PositionDTO;
 import com.eletronico.pontoapi.core.sector.domain.Sector;
 import com.eletronico.pontoapi.core.sector.dto.SectorDTO;
 import com.eletronico.pontoapi.core.sector.exceptions.SectionAlredyExistException;
@@ -16,6 +18,9 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,12 +51,15 @@ public class SectorService {
         }
         return MapperDTO.parseObject(repository.saveAll(sectors), SectorDTO.class);
     }
+    public Page<SectorDTO> list(Integer page, Integer pageSize) {
+        Pageable pages = PageRequest.of(page, pageSize);
+        Page<Sector> pagedResult = repository.findAll(pages);
 
-    public List<Sector> list() {
-        LOG.info("finding all sectors");
-        return repository.findAll();
+        Page<SectorDTO> pagedDto = pagedResult.map(entity -> {
+            return MapperDTO.parseObject(entity, SectorDTO.class);
+        });
+        return pagedDto;
     }
-
     @Transactional
     public void delete(Integer id) {
         LOG.info("delete sector by id");

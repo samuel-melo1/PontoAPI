@@ -1,6 +1,8 @@
 package com.eletronico.pontoapi.core.position.dto;
 
 import com.eletronico.pontoapi.core.position.domain.Position;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -19,5 +21,11 @@ public class PositionDTO {
 
     @NotNull
     @NotEmpty
+    @JsonIgnore
     private List<Position> positions;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer id_position;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String name;
 }
