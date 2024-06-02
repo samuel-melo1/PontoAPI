@@ -22,6 +22,12 @@ public class UserController {
         userService.saveUser(userDTO);
         return ResponseHandler.responseCreated("Created sucess", HttpStatus.OK);
     }
+    @PostMapping("/disable/{id}")
+    public ResponseEntity<Object> disable(@PathVariable("id") Integer id) {
+        userService.disableUser(id);
+        return ResponseHandler.responseDelete("Disable User Sucess", HttpStatus.OK);
+    }
+
     @GetMapping("/list-users")
     public ResponseEntity<Page<StandardListUserDTO>> getUserList(@RequestParam(name = "page", defaultValue = "0") int page,
                                                                  @RequestParam(name = "size", defaultValue = "10") int size) {
