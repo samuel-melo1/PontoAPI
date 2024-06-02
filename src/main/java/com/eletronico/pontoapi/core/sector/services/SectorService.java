@@ -65,7 +65,6 @@ public class SectorService {
 
         repository.delete(userExist.get());
     }
-
     public SectorDTO update(SectorDTO dto) {
         LOG.info("updating users");
 
@@ -75,5 +74,12 @@ public class SectorService {
         entity.setName(dto.getName());
         entity.setStatus(dto.getStatus());
         return MapperDTO.parseObject(repository.save(entity), SectorDTO.class);
+    }
+
+    public void disableSector(Integer id_user){
+        var entityUser = repository.findById(id_user)
+                .orElseThrow(() -> new SectionNotFoundException(NOT_FOUND_USER));
+
+        entityUser.setStatus(false);
     }
 }

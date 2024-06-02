@@ -7,6 +7,7 @@ import com.eletronico.pontoapi.core.position.enums.PositionExceptionStatusError;
 import com.eletronico.pontoapi.core.position.exceptions.PositionAlredyExistException;
 import com.eletronico.pontoapi.adapters.utils.mapper.MapperDTO;
 import com.eletronico.pontoapi.core.position.exceptions.PositionNotFoundException;
+import com.eletronico.pontoapi.core.user.exceptions.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.eletronico.pontoapi.core.position.enums.PositionExceptionStatusError.NOT_FOUND_POSITION;
+import static com.eletronico.pontoapi.core.user.enums.UserExceptionStatusError.NOT_EXIST;
 
 
 @Service
@@ -67,5 +69,12 @@ public class PositionService {
         entity.setName(dto.getName());
         entity.setStatus(dto.getStatus());
         return MapperDTO.parseObject(repository.save(entity), PositionDTO.class);
+    }
+
+    public void disablePosition(Integer id_user){
+        var entityUser = repository.findById(id_user)
+                .orElseThrow(() -> new PositionNotFoundException(NOT_FOUND_POSITION));
+
+        entityUser.setStatus(false);
     }
 }

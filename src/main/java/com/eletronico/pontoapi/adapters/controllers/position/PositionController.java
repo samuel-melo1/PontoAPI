@@ -23,12 +23,18 @@ public class PositionController {
         service.create(positions);
         return ResponseHandler.responseCreated("Create Sucess", HttpStatus.CREATED);
     }
+
+    @PostMapping("/disable/{id}")
+    public ResponseEntity<Object> disable(@PathVariable("id") Integer id) {
+        service.disablePosition(id);
+        return ResponseHandler.responseDelete("Disable Position Sucess", HttpStatus.OK);
+    }
+
     @GetMapping("/list-positions")
     public ResponseEntity<Page<PositionDTO>> list(@RequestParam(name = "page") int page,
                                                   @RequestParam(name = "size") int size) {
         return new ResponseEntity<>(service.findAll(page, size), HttpStatus.OK);
     }
-
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable("id") Integer id) {
         service.delete(id);
