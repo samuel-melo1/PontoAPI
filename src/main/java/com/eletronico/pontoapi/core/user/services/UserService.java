@@ -109,5 +109,14 @@ public class UserService {
         return MapperDTO.parseObject(userRepository.save(entity), EditListUserDTO.class);
     }
 
+    public void disableUser(Integer id_user){
+        var entityUser = userRepository.findById(id_user)
+                .orElseThrow(() -> new UserNotFoundException(NOT_EXIST));
 
+        entityUser.setAccountNonExpired(false);
+        entityUser.setAccountNonLocked(false);
+        entityUser.setCredentialsNonExpired(false);
+        entityUser.setEnabled(false);
+        entityUser.setStatus(true);
+    }
 }
