@@ -28,4 +28,6 @@ public class PositionDTO {
     private Integer id_position;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean status;
 }

@@ -7,9 +7,6 @@ import com.eletronico.pontoapi.core.position.enums.PositionExceptionStatusError;
 import com.eletronico.pontoapi.core.position.exceptions.PositionAlredyExistException;
 import com.eletronico.pontoapi.adapters.utils.mapper.MapperDTO;
 import com.eletronico.pontoapi.core.position.exceptions.PositionNotFoundException;
-
-import com.eletronico.pontoapi.core.user.domain.User;
-import com.eletronico.pontoapi.core.user.dto.StandardListUserDTO;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -21,6 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+
+import static com.eletronico.pontoapi.core.position.enums.PositionExceptionStatusError.NOT_FOUND_POSITION;
+
 
 @Service
 @Slf4j
@@ -37,6 +37,7 @@ public class PositionService {
             if (entity != null) {
                 throw new PositionAlredyExistException(PositionExceptionStatusError.ALREDY_EXIST);
             }
+            position.setStatus(true);
         }
         return MapperDTO.parseObject(repository.saveAll(positions), PositionDTO.class);
     }
@@ -53,8 +54,18 @@ public class PositionService {
     public void delete(Integer id) {
         LOG.info("delete position by id");
         Optional<Position> positonExist = Optional.ofNullable(repository.findById(id)
-                .orElseThrow(() -> new PositionNotFoundException(PositionExceptionStatusError.NOT_FOUND_POSITION)));
+                .orElseThrow(() -> new PositionNotFoundException(NOT_FOUND_POSITION)));
 
         repository.delete(positonExist.get());
+    }
+    public PositionDTO update(PositionDTO dto) {
+        LOG.info("updating users");
+
+        Position entity = repository.findByName(dto.getName())
+                .orElseThrow(() -> new PositionNotFoundException(NOT_FOUND_POSITION));
+
+        entity.setName(dto.getName());
+        entity.setStatus(dto.getStatus());
+        return MapperDTO.parseObject(repository.save(entity), PositionDTO.class);
     }
 }

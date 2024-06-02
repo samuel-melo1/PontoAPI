@@ -22,6 +22,7 @@ public class Position implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_position;
     private String name;
+    private Boolean status;
     @JsonIgnore
     @OneToMany(mappedBy = "position")
     private List<User> users = new ArrayList<>();

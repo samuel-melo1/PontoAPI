@@ -24,8 +24,8 @@ public class PositionController {
         return ResponseHandler.responseCreated("Create Sucess", HttpStatus.CREATED);
     }
     @GetMapping("/list-positions")
-    public ResponseEntity<Page<PositionDTO>> list(@RequestParam(name = "page", defaultValue = "0") int page,
-                                               @RequestParam(name = "size", defaultValue = "10") int size) {
+    public ResponseEntity<Page<PositionDTO>> list(@RequestParam(name = "page") int page,
+                                                  @RequestParam(name = "size") int size) {
         return new ResponseEntity<>(service.findAll(page, size), HttpStatus.OK);
     }
 
