@@ -22,6 +22,7 @@ public class Sector implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_sector;
     private String name;
+    private Boolean status;
     @JsonIgnore
     @OneToMany(mappedBy = "sector")
     private List<User> users = new ArrayList<>();

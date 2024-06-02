@@ -4,6 +4,7 @@ import com.eletronico.pontoapi.adapters.response.standardResponse.ResponseHandle
 import com.eletronico.pontoapi.core.sector.domain.Sector;
 import com.eletronico.pontoapi.core.sector.dto.SectorDTO;
 import com.eletronico.pontoapi.core.sector.services.SectorService;
+import com.eletronico.pontoapi.core.user.dto.EditListUserDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,8 +25,8 @@ public class SectorController {
         return ResponseHandler.responseCreated("Created Sucess", HttpStatus.OK);
     }
     @GetMapping("/list-sectors")
-    public ResponseEntity<Page<SectorDTO>> list(@RequestParam(name = "page", defaultValue = "0") int page,
-                                             @RequestParam(name = "size", defaultValue = "10") int size){
+    public ResponseEntity<Page<SectorDTO>> list(@RequestParam(name = "page") int page,
+                                             @RequestParam(name = "size") int size){
         return ResponseEntity.ok(service.list(page, size));
     }
 
@@ -33,5 +34,10 @@ public class SectorController {
     public ResponseEntity<Object> delete(@PathVariable("id") Integer id) {
         service.delete(id);
         return ResponseHandler.responseDelete("Delete Sucess", HttpStatus.OK);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<Object> update(@RequestBody @Valid SectorDTO dto) {
+        return ResponseHandler.responseUpdate(service.update(dto), HttpStatus.OK);
     }
 }

@@ -27,4 +27,6 @@ public class SectorDTO implements Serializable {
     private Integer id_sector;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean status;
 }
