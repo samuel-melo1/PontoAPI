@@ -21,17 +21,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-    @NotBlank(message = "O email não deve ser nulo ou vazio")
-    @Email(message = "email deve ser valido")
+   // @NotBlank(message = "O email não deve ser nulo ou vazio")
+   // @Email(message = "email deve ser valido")
     private String email;
-    @NotBlank(message = "A senha não deve ser nula ou vazia")
+  //  @NotBlank(message = "A senha não deve ser nula ou vazia")
     private String password;
-    @NotBlank(message = "O telefone não deve ser nulo ou vazio")
+  //  @NotBlank(message = "O telefone não deve ser nulo ou vazio")
     private String telefone;
-    @NotBlank(message = "O cpf não deve ser nulo ou vazio")
-    @Size(min = 11, max = 11, message = "O cpf deve ter 11 digitos")
+   // @NotBlank(message = "O cpf não deve ser nulo ou vazio")
+   // @Size(min = 11, max = 11, message = "O cpf deve ter 11 digitos")
     private String cpf;
-    @NotBlank(message = "O nome não deve ser nulo ou vazio")
+//    @NotBlank(message = "O nome não deve ser nulo ou vazio")
     private String name;
     private Position position;
     private Sector sector;

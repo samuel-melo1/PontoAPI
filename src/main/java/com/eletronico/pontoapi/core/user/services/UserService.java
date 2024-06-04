@@ -1,7 +1,6 @@
 package com.eletronico.pontoapi.core.user.services;
 
 import com.eletronico.pontoapi.adapters.database.user.UserRepository;
-import com.eletronico.pontoapi.core.role.domain.Role;
 import com.eletronico.pontoapi.core.user.domain.User;
 import com.eletronico.pontoapi.core.user.dto.EditListUserDTO;
 import com.eletronico.pontoapi.core.user.dto.StandardListUserDTO;

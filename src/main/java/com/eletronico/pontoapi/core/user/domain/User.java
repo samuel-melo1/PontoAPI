@@ -40,10 +40,10 @@ public class User implements UserDetails, Serializable {
     private Boolean accountNonLocked;
     private Boolean credentialsNonExpired;
     private Boolean enabled;
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "position_id")
     private Position position;
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "sector_id")
     private Sector sector;
     @ManyToMany(fetch = FetchType.EAGER)
