@@ -24,18 +24,23 @@ public class SectorController {
         service.create(sectors);
         return ResponseHandler.responseCreated("Created Sucess", HttpStatus.OK);
     }
-    @GetMapping("/list-sectors")
-    public ResponseEntity<Page<SectorDTO>> list(@RequestParam(name = "page") int page,
-                                             @RequestParam(name = "size") int size){
-        return ResponseEntity.ok(service.list(page, size));
+
+    @PostMapping("/disable/{id}")
+    public ResponseEntity<Object> disable(@PathVariable("id") Integer id) {
+        service.disableSector(id);
+        return ResponseHandler.responseDelete("Disable Position Sucess", HttpStatus.OK);
     }
 
+    @GetMapping("/list-sectors")
+    public ResponseEntity<Page<SectorDTO>> list(@RequestParam(name = "page") int page,
+                                                @RequestParam(name = "size") int size){
+        return ResponseEntity.ok(service.list(page, size));
+    }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable("id") Integer id) {
         service.delete(id);
         return ResponseHandler.responseDelete("Delete Sucess", HttpStatus.OK);
     }
-
     @PutMapping("/update")
     public ResponseEntity<Object> update(@RequestBody @Valid SectorDTO dto) {
         return ResponseHandler.responseUpdate(service.update(dto), HttpStatus.OK);

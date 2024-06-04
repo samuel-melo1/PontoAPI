@@ -117,6 +117,6 @@ public class UserService {
         entityUser.setAccountNonLocked(false);
         entityUser.setCredentialsNonExpired(false);
         entityUser.setEnabled(false);
-        entityUser.setStatus(true);
+        entityUser.setStatus(false);
     }
 }
