@@ -14,24 +14,7 @@ import java.util.List;
 
 import static com.eletronico.pontoapi.core.sector.enums.SectionExceptionStatusError.ALREDY_EXIST;
 
-@Service
-@Slf4j
-public class RoleService {
-
-    @Autowired
-    private RoleRepository repository;
-    @Transactional
-    public RoleDTO create(RoleDTO dto){
-
-        var entity = repository.findById(dto.getCode());
-        if (entity.isPresent()) {
-            throw new SectionAlredyExistException(ALREDY_EXIST);
-        }
-        Role newRole = Role.builder()
-                .name(dto.getName()).build();
-        return MapperDTO.parseObject(repository.save(newRole), RoleDTO.class);
-    }
-    public List<Role> list(){
-        return repository.findAll();
-    }
+public interface RoleService {
+    RoleDTO create(RoleDTO dto);
+    List<Role> list();
 }
