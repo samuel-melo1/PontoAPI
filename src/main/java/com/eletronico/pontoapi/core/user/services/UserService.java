@@ -14,5 +14,5 @@ public interface UserService {
     Optional<User> findUserByEmail(String email);
     void delete(Integer id);
     EditListUserDTO update(EditListUserDTO dto);
-
+    void disableUser(Integer id_user);
 }
