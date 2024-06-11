@@ -10,6 +10,7 @@ public interface PositionService {
 
     PositionDTO create(List<Position> positions);
     Page<PositionDTO> findAll(Integer page, Integer pageSize);
+    List<PositionDTO> findAll();
     void delete(Integer id);
     PositionDTO update(PositionDTO dto);
     void disablePosition(Integer id_user);

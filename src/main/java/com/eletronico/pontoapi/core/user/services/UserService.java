@@ -5,7 +5,6 @@ import com.eletronico.pontoapi.core.user.dto.EditListUserDTO;
 import com.eletronico.pontoapi.core.user.dto.StandardListUserDTO;
 import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import org.springframework.data.domain.Page;
-
 import java.util.Optional;
 
 public interface UserService {

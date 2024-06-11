@@ -5,6 +5,7 @@ import com.eletronico.pontoapi.core.position.domain.Position;
 import com.eletronico.pontoapi.core.position.dto.PositionDTO;
 import com.eletronico.pontoapi.core.position.services.PositionService;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,11 @@ public class PositionController {
     public ResponseEntity<Page<PositionDTO>> list(@RequestParam(name = "page") int page,
                                                   @RequestParam(name = "size") int size) {
         return new ResponseEntity<>(service.findAll(page, size), HttpStatus.OK);
+    }
+
+    @GetMapping("/list-all-positions")
+    public ResponseEntity<List<PositionDTO>> listAll(){
+        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable("id") Integer id) {

@@ -50,6 +50,11 @@ public class PositionServiceImpl implements PositionService {
         });
         return pagedDto;
     }
+    @Override
+    public List<PositionDTO> findAll() {
+        return MapperDTO.parseListObjects(repository.findAll(), PositionDTO.class);
+    }
+
     @Transactional
     @Override
     public void delete(Integer id) {
