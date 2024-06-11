@@ -18,10 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
-
 import static com.eletronico.pontoapi.core.sector.enums.SectionExceptionStatusError.ALREDY_EXIST;
 import static com.eletronico.pontoapi.core.sector.enums.SectionExceptionStatusError.NOT_FOUND_USER;
 
@@ -58,6 +56,11 @@ public class SectorServiceImpl implements SectorService {
         });
         return pagedDto;
     }
+    @Override
+    public List<SectorDTO> listAll() {
+        return MapperDTO.parseListObjects(repository.findAll(), SectorDTO.class);
+    }
+
     @Transactional
     @Override
     public void delete(Integer id) {

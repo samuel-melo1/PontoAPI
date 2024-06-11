@@ -36,6 +36,10 @@ public class SectorController {
                                                 @RequestParam(name = "size") int size){
         return ResponseEntity.ok(service.list(page, size));
     }
+    @GetMapping("/list-all-sectors")
+    public ResponseEntity<List<SectorDTO>> listAll(){
+        return new ResponseEntity<>(service.listAll(), HttpStatus.OK);
+    }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable("id") Integer id) {
         service.delete(id);
