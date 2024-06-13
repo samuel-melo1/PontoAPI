@@ -7,6 +7,8 @@ import com.eletronico.pontoapi.core.sector.domain.Sector;
 import com.eletronico.pontoapi.core.user.domain.User;
 import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import com.eletronico.pontoapi.core.user.enums.UserRole;
+import com.eletronico.pontoapi.core.user.exceptions.UserAlredyExistException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,6 +45,7 @@ class UserServiceImplTest {
 
     private UserDTO userDto;
     private User user;
+    private Optional<User> userOptional;
 
 
     @BeforeEach
@@ -60,19 +65,51 @@ class UserServiceImplTest {
         assertEquals(UserDTO.class, response.getClass());
         assertEquals("samuel", response.getName());
         assertEquals("samuel@gmail.com", response.getEmail());
+        assertEquals("48996859940", response.getTelefone());
+        assertEquals("12256131912", response.getCpf());
+        assertEquals(UserRole.ADMINISTRADOR, response.getUserRole());
+        assertEquals(new Position(1, "Programador", true, null), response.getPosition());
+        assertEquals(new Sector(1, "Engenharia", true, null), response.getSector());
+        assertEquals(List.of(new Role(1, "Colaborador")), response.getRole());
 
         verify(repository, times(1)).save(any());
         verify(repository, times(1)).existsPessoaByEmail(anyString());
-        verify(service, times(1)).saveUser(userDto);
+    }
+
+    @Test
+    void whenCreateUserThenReturnUserAlredyExistException() {
+        when(repository.existsPessoaByEmail(anyString())).thenReturn(true);
+
+        Exception thrown = assertThrows(UserAlredyExistException.class, () -> {
+            this.service.saveUser(userDto);
+        });
+
+        assertEquals(UserAlredyExistException.class, thrown.getClass());
+        assertEquals("User alredy Exist. Please, try other!", thrown.getMessage());
+    }
+
+    @Test
+    void whenFindUserByEmailThenReturnAnUserInstance() {
+        when(repository.findUserByEmail(anyString())).thenReturn(userOptional);
+
+        Optional<User> response = service.findUserByEmail("samuel@gmail.com");
+
+        assertNotNull(response);
+        assertEquals(Optional.class, response.getClass());
+        assertEquals("samuel", response.get().getName());
+        assertEquals("samuel@gmail.com", response.get().getEmail());
+        assertEquals("48996859940", response.get().getTelefone());
+        assertEquals("12256131912", response.get().getCpf());
+        assertEquals(UserRole.ADMINISTRADOR, response.get().getUserRole());
+        assertEquals(new Position(1, "Programador", true, null), response.get().getPosition());
+        assertEquals(new Sector(1, "Engenharia", true, null), response.get().getSector());
+        assertEquals(List.of("Colaborador"), response.get().getRoles());
+
+        verify(repository, times(1)).findUserByEmail(anyString());
     }
 
     @Test
     void listUser() {
-
-    }
-
-    @Test
-    void findUserByEmail() {
 
     }
 
@@ -116,6 +153,12 @@ class UserServiceImplTest {
         userDto.setSector(new Sector(1, "Engenharia", true, null));
         userDto.setRole(List.of(new Role(1, "Colaborador")));
 
+        userOptional = Optional.of(
+                new User(null,"samuel@gmail.com", "samuel", "1234","48996859940", "12256131912",true, UserRole.ADMINISTRADOR,
+                        true, true, true, true, new Position(1, "Programador", true, null),
+                        new Sector(1, "Engenharia", true, null),
+                        List.of(new Role(1, "Colaborador")))
+        );
     }
 
 }

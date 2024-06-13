@@ -124,5 +124,7 @@ public class UserServiceImpl implements UserService{
         entityUser.setCredentialsNonExpired(false);
         entityUser.setEnabled(false);
         entityUser.setStatus(false);
+
+        MapperDTO.parseObject(entityUser, EditListUserDTO.class);
     }
 }
