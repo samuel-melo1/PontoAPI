@@ -4,6 +4,10 @@ import com.eletronico.pontoapi.core.position.domain.Position;
 import com.eletronico.pontoapi.core.role.domain.Role;
 import com.eletronico.pontoapi.core.sector.domain.Sector;
 import com.eletronico.pontoapi.core.user.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -20,11 +24,13 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class UserDTO {
     @NotBlank(message = "O email não deve ser nulo ou vazio")
     @Email(message = "email deve ser valido")
     private String email;
     @NotBlank(message = "A senha não deve ser nula ou vazia")
+    @JsonIgnore
     private String password;
     @NotBlank(message = "O telefone não deve ser nulo ou vazio")
     private String telefone;
