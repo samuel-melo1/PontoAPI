@@ -64,13 +64,13 @@ public class UserServiceImpl implements UserService{
         return mapper.map(userRepository.save(newUser), UserDTO.class);
     }
     @Override
-    public Page<StandardListUserDTO> listUser(Integer page, Integer pageSize) {
+    public Page<UserDTO> listUser(Integer page, Integer pageSize) {
         LOG.info("Pagination list users");
         Pageable pages = PageRequest.of(page, pageSize);
         Page<User> pagedResult = userRepository.findAll(pages);
 
-        Page<StandardListUserDTO> pagedDto = pagedResult.map(entity -> {
-            return MapperDTO.parseObject(entity, StandardListUserDTO.class);
+        Page<UserDTO> pagedDto = pagedResult.map(entity -> {
+            return MapperDTO.parseObject(entity, UserDTO.class);
 
         });
         return pagedDto;
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService{
         userRepository.delete(userExist.get());
     }
     @Override
-    public EditListUserDTO update(EditListUserDTO dto) {
+    public UserDTO update(UserDTO dto) {
         LOG.info("updating users");
 
         User entity = userRepository.findUserByEmail(dto.getEmail())
@@ -110,9 +110,9 @@ public class UserServiceImpl implements UserService{
         entity.setCpf(dto.getCpf());
         entity.setPosition(dto.getPosition());
         entity.setSector(dto.getSector());
-        entity.setPermissions(dto.getPermissions());
+        entity.setPermissions(dto.getRole());
 
-        return MapperDTO.parseObject(userRepository.save(entity), EditListUserDTO.class);
+        return MapperDTO.parseObject(userRepository.save(entity), UserDTO.class);
     }
 
     public void disableUser(Integer id_user){
@@ -125,6 +125,6 @@ public class UserServiceImpl implements UserService{
         entityUser.setEnabled(false);
         entityUser.setStatus(false);
 
-        MapperDTO.parseObject(entityUser, EditListUserDTO.class);
+        MapperDTO.parseObject(userRepository.save(entityUser), UserDTO.class);
     }
 }

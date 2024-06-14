@@ -9,9 +9,9 @@ import java.util.Optional;
 
 public interface UserService {
     UserDTO saveUser(UserDTO dto);
-    Page<StandardListUserDTO> listUser(Integer page, Integer pageSize);
+    Page<UserDTO> listUser(Integer page, Integer pageSize);
     Optional<User> findUserByEmail(String email);
     void delete(Integer id);
-    EditListUserDTO update(EditListUserDTO dto);
+    UserDTO update(UserDTO dto);
     void disableUser(Integer id_user);
 }

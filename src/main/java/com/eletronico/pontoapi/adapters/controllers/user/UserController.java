@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/list-users")
-    public ResponseEntity<Page<StandardListUserDTO>> getUserList(@RequestParam(name = "page", defaultValue = "0") int page,
+    public ResponseEntity<Page<UserDTO>> getUserList(@RequestParam(name = "page", defaultValue = "0") int page,
                                                                  @RequestParam(name = "size", defaultValue = "10") int size) {
         return new ResponseEntity<>(service.listUser(page, size), HttpStatus.OK);
     }
@@ -40,7 +40,7 @@ public class UserController {
         return ResponseHandler.responseDelete("Delete Sucess", HttpStatus.OK);
     }
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody @Valid EditListUserDTO dto) {
+    public ResponseEntity<Object> update(@RequestBody @Valid UserDTO dto) {
         return ResponseHandler.responseUpdate(service.update(dto), HttpStatus.OK);
     }
 }
