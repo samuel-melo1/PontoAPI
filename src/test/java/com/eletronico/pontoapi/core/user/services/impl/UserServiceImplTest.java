@@ -8,7 +8,7 @@ import com.eletronico.pontoapi.core.user.domain.User;
 import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import com.eletronico.pontoapi.core.user.enums.UserRole;
 import com.eletronico.pontoapi.core.user.exceptions.UserAlredyExistException;
-import org.junit.jupiter.api.Assertions;
+import com.eletronico.pontoapi.core.user.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,29 +17,23 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import static com.eletronico.pontoapi.core.user.enums.UserExceptionStatusError.NOT_EXIST;
 
 @SpringBootTest
 class UserServiceImplTest {
 
     @InjectMocks
     private UserServiceImpl service;
-
     @Mock
     private UserRepository repository;
-
     @Mock
     private PasswordEncoder passwordEncoder;
-
     @Mock
     private ModelMapper mapper;
 
@@ -109,6 +103,46 @@ class UserServiceImplTest {
     }
 
     @Test
+    void whenFindUserByEmailThenReturnUserNotFoundException() {
+        when(repository.findUserByEmail(anyString())).thenReturn(Optional.empty());
+
+        Exception thrown = assertThrows(UserNotFoundException.class, () -> {
+            this.service.findUserByEmail(userOptional.get().getEmail());
+        });
+
+        assertEquals(UserNotFoundException.class, thrown.getClass());
+        assertEquals("User Not Found!", thrown.getMessage());
+    }
+
+    @Test
+    void whenDisableUserCadasterReturnSuccess() {
+        when(repository.findById(anyInt())).thenReturn(userOptional);
+        when(repository.save(any())).thenReturn(user);
+        when(mapper.map(any(User.class), any(Class.class))).thenReturn(userDto);
+
+        service.disableUser(1);
+        verify(repository, times(1)).save(any());
+        verify(repository, times(1)).findById(anyInt());
+    }
+    @Test
+    void whenDisableUserCadasterThenReturnUserNotFoundException() {
+        when(repository.findById(anyInt())).thenReturn(Optional.empty());
+
+        Exception thrown = assertThrows(UserNotFoundException.class, () -> {
+            this.service.disableUser(2);
+        });
+
+        assertEquals(UserNotFoundException.class, thrown.getClass());
+        assertEquals("User Not Found!", thrown.getMessage());
+    }
+
+    @Test
+    void update() {
+
+    }
+
+
+    @Test
     void listUser() {
 
     }
@@ -118,19 +152,11 @@ class UserServiceImplTest {
 
     }
 
-    @Test
-    void update() {
-
-    }
-
-    @Test
-    void disableUser() {
-
-    }
 
     private void startMockUser() {
 
         user = new User();
+        user.setId_user(1);
         user.setEmail("samuel@gmail.com");
         user.setPassword("1234");
         user.setTelefone("48996859940");
@@ -154,7 +180,7 @@ class UserServiceImplTest {
         userDto.setRole(List.of(new Role(1, "Colaborador")));
 
         userOptional = Optional.of(
-                new User(null,"samuel@gmail.com", "samuel", "1234","48996859940", "12256131912",true, UserRole.ADMINISTRADOR,
+                new User(1, "samuel@gmail.com", "samuel", "1234", "48996859940", "12256131912", true, UserRole.ADMINISTRADOR,
                         true, true, true, true, new Position(1, "Programador", true, null),
                         new Sector(1, "Engenharia", true, null),
                         List.of(new Role(1, "Colaborador")))
