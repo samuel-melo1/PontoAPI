@@ -39,7 +39,7 @@ public class SectorServiceImpl implements SectorService {
         LOG.info("creating sector");
         for (Sector sector : sectors) {
             var entity = repository.findByName(sector.getName());
-            if (entity != null) {
+            if (entity.isPresent()) {
                 throw new SectionAlredyExistException(ALREDY_EXIST);
             }
             sector.setStatus(true);

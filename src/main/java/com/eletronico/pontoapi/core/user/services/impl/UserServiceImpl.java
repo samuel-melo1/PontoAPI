@@ -71,7 +71,6 @@ public class UserServiceImpl implements UserService{
 
         Page<UserDTO> pagedDto = pagedResult.map(entity -> {
             return MapperDTO.parseObject(entity, UserDTO.class);
-
         });
         return pagedDto;
     }

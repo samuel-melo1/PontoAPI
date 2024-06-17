@@ -34,7 +34,7 @@ public class PositionServiceImpl implements PositionService {
         LOG.info("creating sector");
         for (Position position : positions) {
             var entity = repository.findByName(position.getName());
-            if (entity != null) {
+            if (entity.isPresent()) {
                 throw new PositionAlredyExistException(PositionExceptionStatusError.ALREDY_EXIST);
             }
             position.setStatus(true);
