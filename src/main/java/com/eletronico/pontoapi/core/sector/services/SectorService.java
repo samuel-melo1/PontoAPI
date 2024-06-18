@@ -6,6 +6,7 @@ import com.eletronico.pontoapi.core.sector.dto.SectorDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SectorService {
 
@@ -15,5 +16,5 @@ public interface SectorService {
     List<SectorDTO> listAll();
     void delete(Integer id);
     void disableSector(Integer id_user);
-
+    Optional<SectorDTO> findSectorById(Integer id);
 }

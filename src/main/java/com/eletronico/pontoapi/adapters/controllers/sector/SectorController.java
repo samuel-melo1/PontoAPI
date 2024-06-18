@@ -4,6 +4,7 @@ import com.eletronico.pontoapi.adapters.response.standardResponse.ResponseHandle
 import com.eletronico.pontoapi.core.sector.domain.Sector;
 import com.eletronico.pontoapi.core.sector.dto.SectorDTO;
 import com.eletronico.pontoapi.core.sector.services.SectorService;
+import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/sector")
@@ -34,6 +36,10 @@ public class SectorController {
     public ResponseEntity<Page<SectorDTO>> list(@RequestParam(name = "page") int page,
                                                 @RequestParam(name = "size") int size){
         return ResponseEntity.ok(service.list(page, size));
+    }
+    @GetMapping("/list/{id}")
+    public ResponseEntity<Optional<SectorDTO>> findByID(@PathVariable("id") Integer id){
+        return  ResponseEntity.ok(service.findSectorById(id));
     }
     @GetMapping("/list-all-sectors")
     public ResponseEntity<List<SectorDTO>> listAll(){

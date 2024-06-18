@@ -7,6 +7,8 @@ import com.eletronico.pontoapi.core.sector.dto.SectorDTO;
 import com.eletronico.pontoapi.core.sector.exceptions.SectionAlredyExistException;
 import com.eletronico.pontoapi.core.sector.exceptions.SectionNotFoundException;
 import com.eletronico.pontoapi.core.sector.services.SectorService;
+import com.eletronico.pontoapi.core.user.dto.UserDTO;
+import com.eletronico.pontoapi.core.user.exceptions.UserNotFoundException;
 import com.eletronico.pontoapi.core.user.services.UserService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import static com.eletronico.pontoapi.core.sector.enums.SectionExceptionStatusError.ALREDY_EXIST;
 import static com.eletronico.pontoapi.core.sector.enums.SectionExceptionStatusError.NOT_FOUND_USER;
+import static com.eletronico.pontoapi.core.user.enums.UserExceptionStatusError.NOT_EXIST;
 
 @Service
 @Slf4j
@@ -46,6 +49,7 @@ public class SectorServiceImpl implements SectorService {
         }
         return MapperDTO.parseObject(repository.saveAll(sectors), SectorDTO.class);
     }
+
     @Override
     public Page<SectorDTO> list(Integer page, Integer pageSize) {
         Pageable pages = PageRequest.of(page, pageSize);
@@ -55,6 +59,15 @@ public class SectorServiceImpl implements SectorService {
             return MapperDTO.parseObject(entity, SectorDTO.class);
         });
         return pagedDto;
+    }
+
+    @Override
+    public Optional<SectorDTO> findSectorById(Integer id) {
+        LOG.info("find users by id");
+        var sector = Optional.ofNullable(repository.findById(id)
+                .orElseThrow(() -> new SectionNotFoundException(NOT_FOUND_USER)));
+
+        return Optional.ofNullable(MapperDTO.parseObject(Optional.of(sector.get()), SectorDTO.class));
     }
     @Override
     public List<SectorDTO> listAll() {
