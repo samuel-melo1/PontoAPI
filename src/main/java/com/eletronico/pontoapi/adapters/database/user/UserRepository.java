@@ -2,13 +2,14 @@ package com.eletronico.pontoapi.adapters.database.user;
 
 import com.eletronico.pontoapi.core.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Integer>{
+public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
     boolean existsPessoaByEmail(String email);
 
     @Query("SELECT u FROM User u WHERE u.email =:email")

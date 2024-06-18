@@ -41,13 +41,11 @@ class UserServiceImplTest {
     private User user;
     private Optional<User> userOptional;
 
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         startMockUser();
     }
-
     @Test
     void whenCreateUserThenReturnSuccess() {
         when(repository.existsPessoaByEmail(anyString())).thenReturn(false);
@@ -64,7 +62,7 @@ class UserServiceImplTest {
         assertEquals(UserRole.ADMINISTRADOR, response.getUserRole());
         assertEquals(new Position(1, "Programador", true, null), response.getPosition());
         assertEquals(new Sector(1, "Engenharia", true, null), response.getSector());
-        assertEquals(List.of(new Role(1, "Colaborador")), response.getRole());
+        assertEquals(List.of(new Role(1, "Colaborador")), response.getPermissions());
 
         verify(repository, times(1)).save(any());
         verify(repository, times(1)).existsPessoaByEmail(anyString());
@@ -75,7 +73,7 @@ class UserServiceImplTest {
         when(repository.existsPessoaByEmail(anyString())).thenReturn(true);
 
         Exception thrown = assertThrows(UserAlredyExistException.class, () -> {
-            this.service.saveUser(userDto);
+            service.saveUser(userDto);
         });
 
         assertEquals(UserAlredyExistException.class, thrown.getClass());
@@ -107,7 +105,7 @@ class UserServiceImplTest {
         when(repository.findUserByEmail(anyString())).thenReturn(Optional.empty());
 
         Exception thrown = assertThrows(UserNotFoundException.class, () -> {
-            this.service.findUserByEmail(userOptional.get().getEmail());
+            service.findUserByEmail(userOptional.get().getEmail());
         });
 
         assertEquals(UserNotFoundException.class, thrown.getClass());
@@ -129,7 +127,7 @@ class UserServiceImplTest {
         when(repository.findById(anyInt())).thenReturn(Optional.empty());
 
         Exception thrown = assertThrows(UserNotFoundException.class, () -> {
-            this.service.disableUser(2);
+            service.disableUser(2);
         });
 
         assertEquals(UserNotFoundException.class, thrown.getClass());
@@ -163,7 +161,6 @@ class UserServiceImplTest {
         user.setSector(new Sector(1, "Engenharia", true, null));
         user.setPermissions(List.of(new Role(1, "Colaborador")));
 
-
         userDto = new UserDTO();
         userDto.setEmail("samuel@gmail.com");
         userDto.setPassword("1234");
@@ -173,7 +170,7 @@ class UserServiceImplTest {
         userDto.setName("samuel");
         userDto.setPosition(new Position(1, "Programador", true, null));
         userDto.setSector(new Sector(1, "Engenharia", true, null));
-        userDto.setRole(List.of(new Role(1, "Colaborador")));
+        userDto.setPermissions(List.of(new Role(1, "Colaborador")));
 
         userOptional = Optional.of(
                 new User(1, "samuel@gmail.com", "samuel", "1234", "48996859940", "12256131912", true, UserRole.ADMINISTRADOR,

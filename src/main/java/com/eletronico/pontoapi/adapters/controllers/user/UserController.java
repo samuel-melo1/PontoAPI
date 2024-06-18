@@ -1,11 +1,8 @@
 package com.eletronico.pontoapi.adapters.controllers.user;
 
 import com.eletronico.pontoapi.adapters.response.standardResponse.ResponseHandler;
-import com.eletronico.pontoapi.core.user.dto.EditListUserDTO;
-import com.eletronico.pontoapi.core.user.dto.StandardListUserDTO;
 import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import com.eletronico.pontoapi.core.user.services.UserService;
-import com.eletronico.pontoapi.core.user.services.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

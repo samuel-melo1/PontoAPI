@@ -3,8 +3,6 @@ package com.eletronico.pontoapi.core.user.services.impl;
 import com.eletronico.pontoapi.adapters.database.user.UserRepository;
 import com.eletronico.pontoapi.adapters.utils.mapper.MapperDTO;
 import com.eletronico.pontoapi.core.user.domain.User;
-import com.eletronico.pontoapi.core.user.dto.EditListUserDTO;
-import com.eletronico.pontoapi.core.user.dto.StandardListUserDTO;
 import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import com.eletronico.pontoapi.core.user.enums.UserRole;
 import com.eletronico.pontoapi.core.user.exceptions.NotPermitedDeleteAdmException;
@@ -59,7 +57,7 @@ public class UserServiceImpl implements UserService{
                 .position(userDTO.getPosition())
                 .sector(userDTO.getSector())
                 .name(userDTO.getName())
-                .permissions(userDTO.getRole()).build();
+                .permissions(userDTO.getPermissions()).build();
 
         return mapper.map(userRepository.save(newUser), UserDTO.class);
     }
@@ -77,7 +75,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public Optional<User> findUserByEmail(String email) {
         LOG.info("find users by email");
-        Optional<User> userExist = Optional.ofNullable(userRepository.findUserByEmail(email)
+        var userExist = Optional.ofNullable(userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
 
         return Optional.of(userExist.get());
@@ -86,7 +84,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public void delete(Integer id) {
         LOG.info("delete users by id");
-        Optional<User> userExist = Optional.ofNullable(userRepository.findById(id)
+        var userExist = Optional.ofNullable(userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
 
         for (String roles : userExist.get().getRoles()){
@@ -100,7 +98,7 @@ public class UserServiceImpl implements UserService{
     public UserDTO update(UserDTO dto) {
         LOG.info("updating users");
 
-        User entity = userRepository.findUserByEmail(dto.getEmail())
+        var entity = userRepository.findUserByEmail(dto.getEmail())
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST));
 
         entity.setEmail(dto.getEmail());
@@ -109,7 +107,7 @@ public class UserServiceImpl implements UserService{
         entity.setCpf(dto.getCpf());
         entity.setPosition(dto.getPosition());
         entity.setSector(dto.getSector());
-        entity.setPermissions(dto.getRole());
+        entity.setPermissions(dto.getPermissions());
 
         return MapperDTO.parseObject(userRepository.save(entity), UserDTO.class);
     }

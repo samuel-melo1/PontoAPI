@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.persistence.MapsId;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -26,6 +27,8 @@ import java.util.List;
 @AllArgsConstructor
 
 public class UserDTO {
+    @MapsId("id_user")
+    private Integer id;
     @NotBlank(message = "O email não deve ser nulo ou vazio")
     @Email(message = "email deve ser valido")
     private String email;
@@ -38,10 +41,11 @@ public class UserDTO {
     @Size(min = 11, max = 11, message = "O cpf deve ter 11 digitos")
     private String cpf;
     @NotBlank(message = "O nome não deve ser nulo ou vazio")
+    private Boolean status;
     private String name;
     private Position position;
     private Sector sector;
     private UserRole userRole;
-    private List<Role> role;
+    private List<Role> permissions;
 
 }
