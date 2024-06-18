@@ -80,6 +80,14 @@ public class UserServiceImpl implements UserService{
 
         return Optional.of(userExist.get());
     }
+    @Override
+    public Optional<UserDTO> findUserById(Integer id) {
+        LOG.info("find users by id");
+        var userExist = Optional.ofNullable(userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
+
+        return Optional.ofNullable(MapperDTO.parseObject(Optional.of(userExist.get()), UserDTO.class));
+    }
     @Transactional
     @Override
     public void delete(Integer id) {

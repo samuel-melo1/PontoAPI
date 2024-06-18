@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping(value = "/api/v1/user")
 public class UserController {
@@ -31,6 +33,10 @@ public class UserController {
                                                                  @RequestParam(name = "size", defaultValue = "10") int size) {
         return new ResponseEntity<>(service.listUser(page, size), HttpStatus.OK);
     }
+    @GetMapping("/list/{id}")
+    public ResponseEntity<Optional<UserDTO>> findByID(@PathVariable("id") Integer id){
+        return  ResponseEntity.ok(service.findUserById(id));
+    }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> saveUser(@PathVariable("id") Integer id) {
         service.delete(id);
@@ -40,4 +46,5 @@ public class UserController {
     public ResponseEntity<Object> update(@RequestBody @Valid UserDTO dto) {
         return ResponseHandler.responseUpdate(service.update(dto), HttpStatus.OK);
     }
+
 }
