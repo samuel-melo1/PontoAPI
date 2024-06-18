@@ -10,6 +10,7 @@ import com.eletronico.pontoapi.core.position.exceptions.PositionNotFoundExceptio
 import com.eletronico.pontoapi.core.position.services.PositionService;
 import com.eletronico.pontoapi.core.sector.dto.SectorDTO;
 import com.eletronico.pontoapi.core.sector.exceptions.SectionNotFoundException;
+import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -62,26 +63,26 @@ public class PositionServiceImpl implements PositionService {
     @Override
     public Optional<PositionDTO> findById(Integer id) {
         LOG.info("find users by id");
-        var position = Optional.ofNullable(repository.findById(id)
+        var entity = Optional.ofNullable(repository.findById(id)
                 .orElseThrow(() -> new PositionNotFoundException(NOT_FOUND_POSITION)));
 
-        return Optional.ofNullable(MapperDTO.parseObject(Optional.of(position.get()), PositionDTO.class));
+        return Optional.ofNullable(MapperDTO.parseObject(Optional.of(entity.get()), PositionDTO.class));
     }
     @Transactional
     @Override
     public void delete(Integer id) {
         LOG.info("delete position by id");
-        Optional<Position> positonExist = Optional.ofNullable(repository.findById(id)
+       var entity = Optional.ofNullable(repository.findById(id)
                 .orElseThrow(() -> new PositionNotFoundException(NOT_FOUND_POSITION)));
 
-        repository.delete(positonExist.get());
+        repository.delete(entity.get());
     }
     @Transactional
     @Override
     public PositionDTO update(PositionDTO dto) {
         LOG.info("updating users");
 
-        Position entity = repository.findByName(dto.getName())
+        var entity = repository.findByName(dto.getName())
                 .orElseThrow(() -> new PositionNotFoundException(NOT_FOUND_POSITION));
 
         entity.setName(dto.getName());
@@ -92,9 +93,10 @@ public class PositionServiceImpl implements PositionService {
     @Transactional
     @Override
     public void disablePosition(Integer id_user){
-        var entityUser = repository.findById(id_user)
+        var entity = repository.findById(id_user)
                 .orElseThrow(() -> new PositionNotFoundException(NOT_FOUND_POSITION));
 
-        entityUser.setStatus(false);
+        entity.setStatus(false);
+        MapperDTO.parseObject(repository.save(entity), PositionDTO.class);
     }
 }
