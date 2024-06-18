@@ -4,7 +4,6 @@ import com.eletronico.pontoapi.adapters.response.standardResponse.ResponseHandle
 import com.eletronico.pontoapi.core.sector.domain.Sector;
 import com.eletronico.pontoapi.core.sector.dto.SectorDTO;
 import com.eletronico.pontoapi.core.sector.services.SectorService;
-import com.eletronico.pontoapi.core.user.dto.EditListUserDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
