@@ -29,7 +29,7 @@ import static com.eletronico.pontoapi.core.user.enums.UserExceptionStatusError.N
 
 @Service
 @Slf4j
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;

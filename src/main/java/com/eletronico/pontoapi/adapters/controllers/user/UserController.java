@@ -22,7 +22,7 @@ public class UserController {
         service.saveUser(userDTO);
         return ResponseHandler.responseCreated("Created sucess", HttpStatus.OK);
     }
-    @PostMapping("/disable/{id}")
+    @PutMapping("/disable/{id}")
     public ResponseEntity<Object> disable(@PathVariable("id") Integer id) {
         service.disableUser(id);
         return ResponseHandler.responseDelete("Disable User Sucess", HttpStatus.OK);
