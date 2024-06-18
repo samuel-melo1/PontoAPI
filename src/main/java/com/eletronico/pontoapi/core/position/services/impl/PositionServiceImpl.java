@@ -8,6 +8,8 @@ import com.eletronico.pontoapi.core.position.enums.PositionExceptionStatusError;
 import com.eletronico.pontoapi.core.position.exceptions.PositionAlredyExistException;
 import com.eletronico.pontoapi.core.position.exceptions.PositionNotFoundException;
 import com.eletronico.pontoapi.core.position.services.PositionService;
+import com.eletronico.pontoapi.core.sector.dto.SectorDTO;
+import com.eletronico.pontoapi.core.sector.exceptions.SectionNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import static com.eletronico.pontoapi.core.position.enums.PositionExceptionStatusError.NOT_FOUND_POSITION;
+import static com.eletronico.pontoapi.core.sector.enums.SectionExceptionStatusError.NOT_FOUND_USER;
+
 @Service
 @Slf4j
 public class PositionServiceImpl implements PositionService {
@@ -55,6 +59,14 @@ public class PositionServiceImpl implements PositionService {
         return MapperDTO.parseListObjects(repository.findAll(), PositionDTO.class);
     }
 
+    @Override
+    public Optional<PositionDTO> findById(Integer id) {
+        LOG.info("find users by id");
+        var position = Optional.ofNullable(repository.findById(id)
+                .orElseThrow(() -> new PositionNotFoundException(NOT_FOUND_POSITION)));
+
+        return Optional.ofNullable(MapperDTO.parseObject(Optional.of(position.get()), PositionDTO.class));
+    }
     @Transactional
     @Override
     public void delete(Integer id) {

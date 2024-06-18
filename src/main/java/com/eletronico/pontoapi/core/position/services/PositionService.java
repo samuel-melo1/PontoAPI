@@ -2,9 +2,11 @@ package com.eletronico.pontoapi.core.position.services;
 
 import com.eletronico.pontoapi.core.position.domain.Position;
 import com.eletronico.pontoapi.core.position.dto.PositionDTO;
+import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PositionService {
 
@@ -14,5 +16,5 @@ public interface PositionService {
     void delete(Integer id);
     PositionDTO update(PositionDTO dto);
     void disablePosition(Integer id_user);
-
+    Optional<PositionDTO> findById(Integer id);
 }

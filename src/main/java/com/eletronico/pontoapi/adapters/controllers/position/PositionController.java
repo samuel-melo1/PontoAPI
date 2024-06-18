@@ -4,6 +4,7 @@ import com.eletronico.pontoapi.adapters.response.standardResponse.ResponseHandle
 import com.eletronico.pontoapi.core.position.domain.Position;
 import com.eletronico.pontoapi.core.position.dto.PositionDTO;
 import com.eletronico.pontoapi.core.position.services.PositionService;
+import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import jakarta.validation.Valid;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/position")
@@ -40,6 +42,11 @@ public class PositionController {
     @GetMapping("/list-all-positions")
     public ResponseEntity<List<PositionDTO>> listAll(){
         return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/list/{id}")
+    public ResponseEntity<Optional<PositionDTO>> findByID(@PathVariable("id") Integer id){
+        return  ResponseEntity.ok(service.findById(id));
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable("id") Integer id) {
