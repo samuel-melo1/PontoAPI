@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @Slf4j
-public class NotPermitedDeleteAdmException extends RuntimeException {
+public class NotPermitDeleteAdmException extends RuntimeException {
     private final HttpStatus httpStatus;
-    public NotPermitedDeleteAdmException(UserExceptionStatusError error) {
+    public NotPermitDeleteAdmException(UserExceptionStatusError error) {
         super(error.getMessage());
         this.httpStatus = error.getStatus();
 

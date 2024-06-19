@@ -1,4 +1,4 @@
-package com.eletronico.pontoapi.core.login.services.handler;
+package com.eletronico.pontoapi.adapters.controllers.login.handler;
 
 import com.eletronico.pontoapi.core.login.exceptions.InvalidJwtAuthenticationException;
 import com.eletronico.pontoapi.adapters.utils.standarderror.RestErrorMessage;

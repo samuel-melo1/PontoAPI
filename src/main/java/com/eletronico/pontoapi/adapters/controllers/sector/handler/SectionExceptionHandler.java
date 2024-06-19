@@ -1,26 +1,24 @@
-package com.eletronico.pontoapi.core.position.exceptions.handler;
+package com.eletronico.pontoapi.adapters.controllers.sector.handler;
 
-import com.eletronico.pontoapi.core.position.exceptions.PositionAlredyExistException;
-import com.eletronico.pontoapi.core.position.exceptions.PositionNotFoundException;
+import com.eletronico.pontoapi.core.sector.exceptions.SectionAlredyExistException;
+import com.eletronico.pontoapi.core.sector.exceptions.SectionNotFoundException;
 import com.eletronico.pontoapi.adapters.utils.standarderror.RestErrorMessage;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import java.time.Instant;
-
 @ControllerAdvice
-@Slf4j
-public class PositionExceptionHandler {
-    @ExceptionHandler(PositionAlredyExistException.class)
-    private ResponseEntity<RestErrorMessage> positionAlredyExistHandler(PositionAlredyExistException exception, HttpServletRequest request) {
+public class SectionExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(SectionAlredyExistException.class)
+    private ResponseEntity<RestErrorMessage> sectionAlredyExistHandler(SectionAlredyExistException exception, HttpServletRequest request) {
         RestErrorMessage err = new RestErrorMessage(Instant.now(), exception.getStatus().value(), exception.getMessage(), request.getRequestURI());
         return ResponseEntity.status(exception.getStatus()).body(err);
     }
-    @ExceptionHandler(PositionNotFoundException.class)
-    private ResponseEntity<RestErrorMessage> positionNotFoundExistHandler(PositionNotFoundException exception, HttpServletRequest request) {
+    @ExceptionHandler(SectionNotFoundException.class)
+    private ResponseEntity<RestErrorMessage> sectionNotFoundExistHandler(SectionNotFoundException exception, HttpServletRequest request) {
         RestErrorMessage err = new RestErrorMessage(Instant.now(), exception.getStatus().value(), exception.getMessage(), request.getRequestURI());
         return ResponseEntity.status(exception.getStatus()).body(err);
     }
