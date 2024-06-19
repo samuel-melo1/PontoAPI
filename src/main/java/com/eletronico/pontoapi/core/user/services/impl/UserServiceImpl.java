@@ -2,6 +2,7 @@ package com.eletronico.pontoapi.core.user.services.impl;
 
 import com.eletronico.pontoapi.adapters.database.user.UserRepository;
 import com.eletronico.pontoapi.adapters.utils.mapper.MapperDTO;
+import com.eletronico.pontoapi.core.role.domain.Role;
 import com.eletronico.pontoapi.core.user.domain.User;
 import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import com.eletronico.pontoapi.core.user.enums.UserRole;
@@ -88,32 +89,30 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Integer id) {
         LOG.info("delete users by id");
-        var userExist = Optional.ofNullable(userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
+        var userExist = findUserById(id);
 
-        for (String roles : userExist.get().getRoles()){
+        for (Role roles : userExist.get().getPermissions()){
             if(Objects.equals(roles, UserRole.ADMINISTRADOR.name())){
                 throw new NotPermitDeleteAdmException(NOT_PERMITED_DELETE);
             }
         }
-        userRepository.deleteById(userExist.get().getId_user());
+        userRepository.deleteById(userExist.get().getId());
     }
     @Override
     public UserDTO update(UserDTO dto) {
         LOG.info("updating users");
 
-        var entity = userRepository.findUserByEmail(dto.getEmail())
-                .orElseThrow(() -> new UserNotFoundException(NOT_EXIST));
+        var entity = findUserByEmail(dto.getEmail());
 
-        entity.setEmail(dto.getEmail());
-        entity.setName(dto.getName());
-        entity.setTelefone(dto.getTelefone());
-        entity.setCpf(dto.getCpf());
-        entity.setPosition(dto.getPosition());
-        entity.setSector(dto.getSector());
-        entity.setPermissions(dto.getPermissions());
+        entity.get().setEmail(dto.getEmail());
+        entity.get().setName(dto.getName());
+        entity.get().setTelefone(dto.getTelefone());
+        entity.get().setCpf(dto.getCpf());
+        entity.get().setPosition(dto.getPosition());
+        entity.get().setSector(dto.getSector());
+        entity.get().setPermissions(dto.getPermissions());
 
-        return MapperDTO.parseObject(userRepository.save(entity), UserDTO.class);
+        return MapperDTO.parseObject(userRepository.save(entity.get()), UserDTO.class);
     }
 
     public void disableUser(Integer id_user){
