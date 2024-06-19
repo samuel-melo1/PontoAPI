@@ -99,7 +99,6 @@ class UserServiceImplTest {
 
         verify(repository, times(1)).findUserByEmail(anyString());
     }
-
     @Test
     void whenFindUserByEmailThenReturnUserNotFoundException() {
         when(repository.findUserByEmail(anyString())).thenReturn(Optional.empty());
@@ -111,7 +110,6 @@ class UserServiceImplTest {
         assertEquals(UserNotFoundException.class, thrown.getClass());
         assertEquals("User Not Found!", thrown.getMessage());
     }
-
     @Test
     void whenDisableUserCadasterReturnSuccess() {
         when(repository.findById(anyInt())).thenReturn(userOptional);
@@ -134,17 +132,57 @@ class UserServiceImplTest {
         assertEquals("User Not Found!", thrown.getMessage());
     }
     @Test
-    void update() {
+    void whenUpdateUserThenReturnSuccess() {
+        when(repository.findUserByEmail(anyString())).thenReturn(userOptional);
+        when(repository.save(any())).thenReturn(user);
+        when(mapper.map(any(User.class), any(Class.class))).thenReturn(userDto);
 
+        UserDTO response = service.update(userDto);
+
+        assertNotNull(response);
+        assertEquals(UserDTO.class, response.getClass());
+        assertEquals(1, response.getId());
+        assertEquals("samuel", response.getName());
+        assertEquals("samuel@gmail.com", response.getEmail());
+        assertEquals("1234", response.getPassword());
+        assertEquals("48996859940", response.getTelefone());
+        assertEquals("12256131912", response.getCpf());
+    }
+    @Test
+    void whenUpdateUserThenReturnUserNotFoundException() {
+        when(repository.findUserByEmail(anyString())).thenThrow(new UserNotFoundException(NOT_EXIST));
+
+        Exception thrown = assertThrows(UserNotFoundException.class, () -> {
+            service.update(userDto);
+        });
+
+        assertEquals(UserNotFoundException.class, thrown.getClass());
+        assertEquals("User Not Found!", thrown.getMessage());
+        verify(repository, times(1)).findUserByEmail(anyString());
     }
 
     @Test
-    void listUser() {
+    void whenDeleteUserThenReturnSuccess() {
 
+        when(repository.findById(anyInt())).thenReturn(userOptional);
+
+        doNothing().when(repository).deleteById(user.getId_user());
+        service.delete(1);
+        verify(repository, times(1)).deleteById(anyInt());
+        verify(repository, times(1)).findById(anyInt());
     }
-    @Test
-    void delete() {
 
+    @Test
+    void whenDeleteUserThenReturnUserNotFoundException() {
+        when(repository.findById(anyInt())).thenThrow(new UserNotFoundException(NOT_EXIST));
+
+        Exception thrown = assertThrows(UserNotFoundException.class, () -> {
+            service.delete(1);
+        });
+
+        assertEquals(UserNotFoundException.class, thrown.getClass());
+        assertEquals("User Not Found!", thrown.getMessage());
+        verify(repository, times(1)).findById(anyInt());
     }
 
     private void startMockUser() {
