@@ -5,7 +5,7 @@ import com.eletronico.pontoapi.adapters.utils.mapper.MapperDTO;
 import com.eletronico.pontoapi.core.user.domain.User;
 import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import com.eletronico.pontoapi.core.user.enums.UserRole;
-import com.eletronico.pontoapi.core.user.exceptions.NotPermitedDeleteAdmException;
+import com.eletronico.pontoapi.core.user.exceptions.NotPermitDeleteAdmException;
 import com.eletronico.pontoapi.core.user.exceptions.UserAlredyExistException;
 import com.eletronico.pontoapi.core.user.exceptions.UserNotFoundException;
 import com.eletronico.pontoapi.core.user.services.UserService;
@@ -17,13 +17,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Objects;
 import java.util.Optional;
-
 import static com.eletronico.pontoapi.core.user.enums.UserExceptionStatusError.*;
 import static com.eletronico.pontoapi.core.user.enums.UserExceptionStatusError.NOT_EXIST;
 
@@ -64,8 +61,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserDTO> listUser(Integer page, Integer pageSize) {
         LOG.info("Pagination list users");
-        Pageable pages = PageRequest.of(page, pageSize);
-        Page<User> pagedResult = userRepository.findAll(pages);
+        Page<User> pagedResult = userRepository.findAll(PageRequest.of(page, pageSize));
 
         Page<UserDTO> pagedDto = pagedResult.map(entity -> {
             return MapperDTO.parseObject(entity, UserDTO.class);
@@ -97,10 +93,10 @@ public class UserServiceImpl implements UserService {
 
         for (String roles : userExist.get().getRoles()){
             if(Objects.equals(roles, UserRole.ADMINISTRADOR.name())){
-                throw new NotPermitedDeleteAdmException(NOT_PERMITED_DELETE);
+                throw new NotPermitDeleteAdmException(NOT_PERMITED_DELETE);
             }
         }
-        userRepository.delete(userExist.get());
+        userRepository.deleteById(userExist.get().getId_user());
     }
     @Override
     public UserDTO update(UserDTO dto) {
