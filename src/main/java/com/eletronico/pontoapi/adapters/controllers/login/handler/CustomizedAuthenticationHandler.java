@@ -16,7 +16,7 @@ import java.time.Instant;
 public class CustomizedAuthenticationHandler {
     @ExceptionHandler(InvalidJwtAuthenticationException.class)
     private ResponseEntity<RestErrorMessage> userNotFoundExistHandler(InvalidJwtAuthenticationException exception, HttpServletRequest request) {
-        RestErrorMessage err = new RestErrorMessage(Instant.now(), HttpStatus.FORBIDDEN.value(),exception.getMessage(), request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+        RestErrorMessage err = new RestErrorMessage(Instant.now(), exception.getStatus().value(),exception.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 }
