@@ -7,6 +7,7 @@ import com.eletronico.pontoapi.core.user.domain.User;
 import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import com.eletronico.pontoapi.core.user.enums.UserRole;
 import com.eletronico.pontoapi.core.user.exceptions.NotPermitDeleteAdmException;
+import com.eletronico.pontoapi.core.user.exceptions.NotPermitDisableAdmException;
 import com.eletronico.pontoapi.core.user.exceptions.UserAlredyExistException;
 import com.eletronico.pontoapi.core.user.exceptions.UserNotFoundException;
 import com.eletronico.pontoapi.core.user.services.UserService;
@@ -20,8 +21,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import static com.eletronico.pontoapi.core.user.enums.UserExceptionStatusError.*;
 import static com.eletronico.pontoapi.core.user.enums.UserExceptionStatusError.NOT_EXIST;
 
@@ -59,16 +65,27 @@ public class UserServiceImpl implements UserService {
 
         return mapper.map(userRepository.save(newUser), UserDTO.class);
     }
-    @Override
-    public Page<UserDTO> listUser(Integer page, Integer pageSize) {
-        LOG.info("Pagination list users");
-        Page<User> pagedResult = userRepository.findAll(PageRequest.of(page, pageSize));
 
-        Page<UserDTO> pagedDto = pagedResult.map(entity -> {
-            return MapperDTO.parseObject(entity, UserDTO.class);
-        });
-        return pagedDto;
+    @Override
+    public List<UserDTO> listUser(Integer page, Integer pageSize) {
+        return MapperDTO.parseListObjects(
+                userRepository.findAllByStatusIsTrue(PageRequest.of(page, pageSize))
+                        .stream()
+                        .map(user -> UserDTO.builder()
+                                .id(user.getId_user())
+                                .email(user.getEmail())
+                                .password(user.getPassword())
+                                .telefone(user.getTelefone())
+                                .cpf(user.getCpf())
+                                .status(user.getStatus())
+                                .name(user.getName())
+                                .position(user.getPosition())
+                                .sector(user.getSector())
+                                .userRole(user.getUserRole())
+                                .permissions(user.getPermissions())
+                                .totalElements(userRepository.count()).build()).collect(Collectors.toList()), UserDTO.class);
     }
+
     @Override
     public Optional<User> findUserByEmail(String email) {
         LOG.info("find users by email");
@@ -77,6 +94,7 @@ public class UserServiceImpl implements UserService {
 
         return Optional.of(userExist.get());
     }
+
     @Override
     public Optional<UserDTO> findUserById(Integer id) {
         LOG.info("find users by id");
@@ -85,19 +103,21 @@ public class UserServiceImpl implements UserService {
 
         return Optional.ofNullable(MapperDTO.parseObject(Optional.of(userExist.get()), UserDTO.class));
     }
+
     @Transactional
     @Override
     public void delete(Integer id) {
         LOG.info("delete users by id");
         var userExist = findUserById(id);
 
-        for (Role roles : userExist.get().getPermissions()){
-            if(Objects.equals(roles, UserRole.ADMINISTRADOR.name())){
+        for (Role roles : userExist.get().getPermissions()) {
+            if (Objects.equals(roles, UserRole.ADMINISTRADOR.name())) {
                 throw new NotPermitDeleteAdmException(NOT_PERMITED_DELETE);
             }
         }
         userRepository.deleteById(userExist.get().getId());
     }
+
     @Override
     public UserDTO update(UserDTO dto) {
         LOG.info("updating users");
@@ -115,9 +135,15 @@ public class UserServiceImpl implements UserService {
         return MapperDTO.parseObject(userRepository.save(entity.get()), UserDTO.class);
     }
 
-    public void disableUser(Integer id_user){
+    public void disableUser(Integer id_user) {
         var entityUser = userRepository.findById(id_user)
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST));
+
+        for (Role roles : entityUser.getPermissions()) {
+            if (Objects.equals(roles, UserRole.ADMINISTRADOR.name())) {
+                throw new NotPermitDisableAdmException(NOT_PERMITED_DISABLE);
+            }
+        }
 
         entityUser.setAccountNonExpired(false);
         entityUser.setAccountNonLocked(false);

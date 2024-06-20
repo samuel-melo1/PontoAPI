@@ -28,24 +28,37 @@ import java.util.List;
 
 public class UserDTO {
     @MapsId("id_user")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer id;
     @NotBlank(message = "O email não deve ser nulo ou vazio")
     @Email(message = "email deve ser valido")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String email;
     @NotBlank(message = "A senha não deve ser nula ou vazia")
     @JsonIgnore
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String password;
     @NotBlank(message = "O telefone não deve ser nulo ou vazio")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String telefone;
     @NotBlank(message = "O cpf não deve ser nulo ou vazio")
     @Size(min = 11, max = 11, message = "O cpf deve ter 11 digitos")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String cpf;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @NotBlank(message = "O nome não deve ser nulo ou vazio")
     private Boolean status;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Position position;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Sector sector;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private UserRole userRole;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<Role> permissions;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Long totalElements;
 
 }

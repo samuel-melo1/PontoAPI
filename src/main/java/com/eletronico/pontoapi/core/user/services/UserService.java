@@ -4,12 +4,13 @@ import com.eletronico.pontoapi.core.user.domain.User;
 import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
     UserDTO saveUser(UserDTO dto);
 
-    Page<UserDTO> listUser(Integer page, Integer pageSize);
+    List<UserDTO> listUser(Integer page, Integer pageSize);
 
     Optional<User> findUserByEmail(String email);
 
