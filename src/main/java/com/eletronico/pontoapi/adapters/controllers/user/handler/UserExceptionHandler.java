@@ -1,6 +1,7 @@
 package com.eletronico.pontoapi.adapters.controllers.user.handler;
 
 import com.eletronico.pontoapi.core.user.exceptions.NotPermitDeleteAdmException;
+import com.eletronico.pontoapi.core.user.exceptions.NotPermitDisableAdmException;
 import com.eletronico.pontoapi.core.user.exceptions.UserAlredyExistException;
 import com.eletronico.pontoapi.core.user.exceptions.UserNotFoundException;
 import com.eletronico.pontoapi.adapters.utils.standarderror.RestErrorMessage;
@@ -25,9 +26,13 @@ public class UserExceptionHandler  {
         RestErrorMessage err = new RestErrorMessage(Instant.now(), exception.getStatus().value(), exception.getMessage(), request.getRequestURI());
         return ResponseEntity.status(exception.getStatus()).body(err);
     }
-
     @ExceptionHandler(NotPermitDeleteAdmException.class)
     private ResponseEntity<RestErrorMessage> userNotFoundExistHandler(NotPermitDeleteAdmException exception, HttpServletRequest request) {
+        RestErrorMessage err = new RestErrorMessage(Instant.now(), exception.getHttpStatus().value(), exception.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(exception.getHttpStatus().value()).body(err);
+    }
+    @ExceptionHandler(NotPermitDisableAdmException.class)
+    private ResponseEntity<RestErrorMessage> userNotFoundExistHandler(NotPermitDisableAdmException exception, HttpServletRequest request) {
         RestErrorMessage err = new RestErrorMessage(Instant.now(), exception.getHttpStatus().value(), exception.getMessage(), request.getRequestURI());
         return ResponseEntity.status(exception.getHttpStatus().value()).body(err);
     }
