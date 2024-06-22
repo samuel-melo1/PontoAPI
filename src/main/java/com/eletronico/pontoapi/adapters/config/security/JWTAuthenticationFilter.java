@@ -14,9 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -49,31 +48,29 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             Authentication authResult) throws IOException, ServletException {
         User username = ((User) authResult.getPrincipal());
         String token = tokenAccess.generateToken(username);
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("roles", username.getRoles());
+        responseData.put("token", token);
+
+
         response.setContentType("application/json");
-        response.setStatus(200);
-        response.getWriter().append(jsonSuccessfulAuthentication(token, username.getRoles()));
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().write(new ObjectMapper().writeValueAsString(responseData));
+
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException failed) throws IOException, ServletException {
-        response.setStatus(401);
-        response.setContentType("application/json");
-        response.getWriter().append(jsonUnsuccessfulAuthentication());
-    }
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("status", HttpServletResponse.SC_UNAUTHORIZED);
+        responseData.put("error", "Não autorizado");
+        responseData.put("message", "Email ou senha inválidos");
+        responseData.put("path", "/api/auth/login");
 
-    private CharSequence jsonUnsuccessfulAuthentication() {
-        DateTimeFormatter dtf = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        return "{"
-             //   "\"timestamp\": " + dtf.format(LocalDateTime.now()) + ", "
-                + "\"status\": 401, "
-                + "\"error\": \"Não autorizado\", "
-                + "\"message\": \"Email ou senha inválidos\", "
-                + "\"path\": \"/api/auth/login\"}";
-    }
-    private CharSequence jsonSuccessfulAuthentication(String token, List<String> roles) {
-        return "{" +
-                "\"token\": " + token + ", "
-                + "\"roles\": " + roles + "}";
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write(new ObjectMapper().writeValueAsString(responseData));
     }
 }
