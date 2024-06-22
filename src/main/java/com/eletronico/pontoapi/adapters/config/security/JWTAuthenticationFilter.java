@@ -36,8 +36,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             AuthenticationDTO credentials = new ObjectMapper().readValue(request.getInputStream(), AuthenticationDTO.class);
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(credentials.email(), credentials.password());
-            Authentication authentication = authenticationManager.authenticate(authenticationToken);
-            return authentication;
+
+            return  authenticationManager.authenticate(authenticationToken);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }catch (AuthenticationException e){
@@ -64,13 +64,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private CharSequence jsonUnsuccessfulAuthentication() {
         DateTimeFormatter dtf = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        String dateTime = dtf.format(LocalDateTime.now());
-        return "{" +
-                "\"timestamp\": " + dateTime + ", "
+        return "{"
+             //   "\"timestamp\": " + dtf.format(LocalDateTime.now()) + ", "
                 + "\"status\": 401, "
                 + "\"error\": \"Não autorizado\", "
                 + "\"message\": \"Email ou senha inválidos\", "
-                + "\"path\": \"/login\"}";
+                + "\"path\": \"/api/auth/login\"}";
     }
     private CharSequence jsonSuccessfulAuthentication(String token, List<String> roles) {
         return "{" +
