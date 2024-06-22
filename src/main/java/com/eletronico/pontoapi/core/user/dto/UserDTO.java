@@ -35,7 +35,6 @@ public class UserDTO {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String email;
     @NotBlank(message = "A senha não deve ser nula ou vazia")
-    @JsonIgnore
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String password;
     @NotBlank(message = "O telefone não deve ser nulo ou vazio")
@@ -46,8 +45,8 @@ public class UserDTO {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String cpf;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @NotBlank(message = "O nome não deve ser nulo ou vazio")
     private Boolean status;
+    @NotBlank(message = "O nome não deve ser nulo ou vazio")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
     @JsonInclude(JsonInclude.Include.NON_NULL)
