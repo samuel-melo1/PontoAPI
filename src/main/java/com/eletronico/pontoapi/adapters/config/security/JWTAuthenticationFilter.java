@@ -51,12 +51,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("roles", username.getRoles());
         responseData.put("token", token);
-
-
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(new ObjectMapper().writeValueAsString(responseData));
-
     }
 
     @Override
@@ -67,7 +64,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         responseData.put("error", "Não autorizado");
         responseData.put("message", "Email ou senha inválidos");
         responseData.put("path", "/api/auth/login");
-
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

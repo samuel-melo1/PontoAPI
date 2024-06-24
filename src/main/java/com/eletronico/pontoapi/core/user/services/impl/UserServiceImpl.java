@@ -17,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,9 +68,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable("users")
     public List<UserDTO> listUser(Integer page, Integer pageSize) {
         return MapperDTO.parseListObjects(
-                userRepository.findAllByStatusIsTrue(PageRequest.of(page, pageSize))
+                userRepository.findAll(PageRequest.of(page, pageSize))
                         .stream()
                         .map(user -> UserDTO.builder()
                                 .id(user.getId_user())
@@ -83,7 +85,7 @@ public class UserServiceImpl implements UserService {
                                 .sector(user.getSector())
                                 .userRole(user.getUserRole())
                                 .permissions(user.getPermissions())
-                                .totalElements(userRepository.count()).build()).collect(Collectors.toList()), UserDTO.class);
+                                .totalElements(findTotalElementsInDataBase()).build()).collect(Collectors.toList()), UserDTO.class);
     }
 
     @Override
@@ -93,6 +95,11 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
 
         return Optional.of(userExist.get());
+    }
+
+    @Cacheable("totalElements")
+    public  Long findTotalElementsInDataBase(){
+        return userRepository.count();
     }
 
     @Override
@@ -123,7 +130,6 @@ public class UserServiceImpl implements UserService {
         LOG.info("updating users");
 
         var entity = findUserByEmail(dto.getEmail());
-
         entity.get().setEmail(dto.getEmail());
         entity.get().setName(dto.getName());
         entity.get().setTelefone(dto.getTelefone());
