@@ -7,6 +7,7 @@ import com.eletronico.pontoapi.core.sector.domain.Sector;
 import com.eletronico.pontoapi.core.user.domain.User;
 import com.eletronico.pontoapi.core.user.dto.UserDTO;
 import com.eletronico.pontoapi.core.user.enums.UserRole;
+import com.eletronico.pontoapi.core.user.exceptions.NotPermitDisableAdmException;
 import com.eletronico.pontoapi.core.user.exceptions.UserAlredyExistException;
 import com.eletronico.pontoapi.core.user.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -126,6 +127,26 @@ class UserServiceImplTest {
 
         Exception thrown = assertThrows(UserNotFoundException.class, () -> {
             service.disableUser(2);
+        });
+
+        assertEquals(UserNotFoundException.class, thrown.getClass());
+        assertEquals("User Not Found!", thrown.getMessage());
+    }
+
+    @Test
+    void whenDisableUserCadasterThenReturnNotPermitedDeleteException() {
+
+        User user1 = new User(1, "samuel@gmail.com", "samuel", "1234", "48996859940",
+                "12256131912", true, UserRole.ADMINISTRADOR,
+                true, true, true, true,
+                new Position(1, "Programador", true, null),
+                new Sector(1, "Engenharia", true, null),
+                List.of(new Role(1, "Colaborador")));
+
+        when(repository.findById(anyInt())).thenReturn(Optional.of(user1));
+
+        Exception thrown = assertThrows(NotPermitDisableAdmException.class, () -> {
+            service.disableUser(1);
         });
 
         assertEquals(UserNotFoundException.class, thrown.getClass());
