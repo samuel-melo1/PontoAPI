@@ -1,15 +1,16 @@
 package com.eletronico.pontoapi.core.user.services.impl;
 
-import com.eletronico.pontoapi.adapters.database.user.UserRepository;
-import com.eletronico.pontoapi.core.position.domain.Position;
-import com.eletronico.pontoapi.core.role.domain.Role;
-import com.eletronico.pontoapi.core.sector.domain.Sector;
-import com.eletronico.pontoapi.core.user.domain.User;
-import com.eletronico.pontoapi.core.user.dto.UserDTO;
-import com.eletronico.pontoapi.core.user.enums.UserRole;
-import com.eletronico.pontoapi.core.user.exceptions.NotPermitDisableAdmException;
-import com.eletronico.pontoapi.core.user.exceptions.UserAlredyExistException;
-import com.eletronico.pontoapi.core.user.exceptions.UserNotFoundException;
+import com.eletronico.pontoapi.infrastructure.persistence.UserRepository;
+import com.eletronico.pontoapi.application.usecases.UserServiceImpl;
+import com.eletronico.pontoapi.core.domain.Position;
+import com.eletronico.pontoapi.core.domain.Role;
+import com.eletronico.pontoapi.core.domain.Sector;
+import com.eletronico.pontoapi.core.domain.User;
+import com.eletronico.pontoapi.entrypoint.dto.request.UserDTO;
+import com.eletronico.pontoapi.core.enums.UserRole;
+import com.eletronico.pontoapi.core.exceptions.NotPermitDisableAdmException;
+import com.eletronico.pontoapi.core.exceptions.UserAlredyExistException;
+import com.eletronico.pontoapi.core.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -24,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static com.eletronico.pontoapi.core.user.enums.UserExceptionStatusError.NOT_EXIST;
+import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.NOT_EXIST;
 
 @SpringBootTest
 class UserServiceImplTest {
