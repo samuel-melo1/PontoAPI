@@ -61,10 +61,8 @@ public class UserServiceImpl implements UserService {
                 .sector(userDTO.getSector())
                 .name(userDTO.getName())
                 .permissions(userDTO.getPermissions()).build();
-
         return mapper.map(userRepository.save(newUser), UserDTO.class);
     }
-
     @Override
     @Cacheable("users")
     public List<UserDTO> listUser(Integer page, Integer pageSize) {
@@ -91,7 +89,6 @@ public class UserServiceImpl implements UserService {
         LOG.info("find users by email");
         var userExist = Optional.ofNullable(userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
-
         return Optional.of(userExist.get());
     }
 
@@ -105,10 +102,8 @@ public class UserServiceImpl implements UserService {
         LOG.info("find users by id");
         var userExist = Optional.ofNullable(userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
-
         return Optional.ofNullable(MapperDTO.parseObject(Optional.of(userExist.get()), UserDTO.class));
     }
-
     @Transactional
     @Override
     public void delete(Integer id) {
@@ -122,7 +117,6 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.deleteById(userExist.get().getId());
     }
-
     @Override
     public UserDTO update(UserDTO dto) {
         LOG.info("updating users");
@@ -148,13 +142,11 @@ public class UserServiceImpl implements UserService {
                 throw new NotPermitDisableAdmException(NOT_PERMITED_DISABLE);
             }
         }
-
         entityUser.setAccountNonExpired(false);
         entityUser.setAccountNonLocked(false);
         entityUser.setCredentialsNonExpired(false);
         entityUser.setEnabled(false);
         entityUser.setStatus(false);
-
         MapperDTO.parseObject(userRepository.save(entityUser), UserDTO.class);
     }
 }
