@@ -38,8 +38,6 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
-    private ModelMapper mapper;
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class.getName());
 
     @Transactional
@@ -61,7 +59,7 @@ public class UserServiceImpl implements UserService {
                 .sector(userDTO.getSector())
                 .name(userDTO.getName())
                 .permissions(userDTO.getPermissions()).build();
-        return mapper.map(userRepository.save(newUser), UserDTO.class);
+        return MapperDTO.parseObject(userRepository.save(newUser), UserDTO.class);
     }
     @Override
     @Cacheable("users")

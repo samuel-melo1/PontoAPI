@@ -30,8 +30,6 @@ public class SectorServiceImpl implements SectorService {
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class.getName());
     @Autowired
     private SectorRepository repository;
-    @Autowired
-    private ModelMapper mapper;
 
     @Transactional
     @Override
