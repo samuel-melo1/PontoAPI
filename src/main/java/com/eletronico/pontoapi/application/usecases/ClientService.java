@@ -18,8 +18,6 @@ public class ClientService implements UserDetailsService {
 
     @Autowired
     private UserRepository repository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = repository.findByEmail(username);
@@ -27,13 +25,5 @@ public class ClientService implements UserDetailsService {
             throw new UsernameNotFoundException("Username " + username + " Not Found!");
         }
         return user;
-    }
-
-    public Optional<User> findByEmail(String email, String password) {
-        log.info("find users by email");
-        var userExist = Optional.ofNullable(repository.findUserByEmail(email)
-                .orElseThrow(() -> new InvalidJwtAuthenticationException(EMAIL_OR_PASSWORD_INVALID)));
-
-        return Optional.of(userExist.get());
     }
 }

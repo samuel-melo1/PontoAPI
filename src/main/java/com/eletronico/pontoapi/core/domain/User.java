@@ -36,10 +36,10 @@ public class User implements UserDetails, Serializable {
     private Boolean accountNonLocked;
     private Boolean credentialsNonExpired;
     private Boolean enabled;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id")
     private Position position;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sector_id")
     private Sector sector;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -55,7 +55,6 @@ public class User implements UserDetails, Serializable {
         return roles;
     }
     @Override
-    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
       return this.permissions;
      }
