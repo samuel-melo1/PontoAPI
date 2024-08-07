@@ -13,7 +13,6 @@ import com.eletronico.pontoapi.core.exceptions.UserNotFoundException;
 import com.eletronico.pontoapi.application.gateways.UserService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +22,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.*;
+import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.ALREDY_EXIST;
 import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.NOT_EXIST;
+import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.NOT_PERMITED_DELETE;
+import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.NOT_PERMITED_DISABLE;
 
 @Service
 @Slf4j
@@ -105,7 +104,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
         return Optional.ofNullable(MapperDTO.parseObject(Optional.of(userExist.get()), UserDTO.class));
     }
-
     @Transactional
     @Override
     public void delete(Integer id) {

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
+public interface UserRepository extends JpaRepository<User, Integer> {
     boolean existsPessoaByEmail(String email);
 
     @Query("SELECT u FROM User u WHERE u.email =:email")
