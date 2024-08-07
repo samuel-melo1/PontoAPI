@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -61,8 +63,9 @@ public class UserServiceImpl implements UserService {
                 .permissions(userDTO.getPermissions()).build();
         return MapperDTO.parseObject(userRepository.save(newUser), UserDTO.class);
     }
+
     @Override
-    @Cacheable("users")
+    // @Cacheable("users")
     public List<UserDTO> listUser(Integer page, Integer pageSize) {
         return MapperDTO.parseListObjects(
                 userRepository.findAll(PageRequest.of(page, pageSize))
@@ -91,7 +94,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Cacheable("totalElements")
-    public  Long findTotalElementsInDataBase(){
+    public Long findTotalElementsInDataBase() {
         return userRepository.count();
     }
 
@@ -102,19 +105,23 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
         return Optional.ofNullable(MapperDTO.parseObject(Optional.of(userExist.get()), UserDTO.class));
     }
+
     @Transactional
     @Override
     public void delete(Integer id) {
         LOG.info("delete users by id");
-        var userExist = findUserById(id);
+        var user = findUserById(id);
 
-        for (Role roles : userExist.get().getPermissions()) {
-            if (Objects.equals(roles, UserRole.ADMINISTRADOR.name())) {
+        for (Role roles : user.get().getPermissions()) {
+            var auth = SecurityContextHolder.getContext().getAuthentication().getAuthorities().
+                    stream().map(GrantedAuthority::getAuthority).toList();
+            if (roles != null && roles.getName().equals(UserRole.ADMINISTRADOR.name()) && !Objects.equals(auth.get(0), UserRole.ADMINISTRADOR.name())) {
                 throw new NotPermitDeleteAdmException(NOT_PERMITED_DELETE);
             }
         }
-        userRepository.deleteById(userExist.get().getId());
+        userRepository.deleteById(user.get().getId());
     }
+
     @Override
     public UserDTO update(UserDTO dto) {
         LOG.info("updating users");
