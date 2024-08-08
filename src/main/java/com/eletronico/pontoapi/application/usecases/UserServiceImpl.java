@@ -1,6 +1,7 @@
 package com.eletronico.pontoapi.application.usecases;
 
 import com.eletronico.pontoapi.infrastructure.persistence.UserRepository;
+import com.eletronico.pontoapi.utils.GenericValidAdministrator;
 import com.eletronico.pontoapi.utils.MapperDTO;
 import com.eletronico.pontoapi.core.domain.Role;
 import com.eletronico.pontoapi.core.domain.User;
@@ -110,14 +111,17 @@ public class UserServiceImpl implements UserService {
         LOG.info("delete users by id");
         var user = findUserById(id);
 
-        for (Role roles : user.get().getPermissions()) {
-            var auth = SecurityContextHolder.getContext().getAuthentication().getAuthorities().
-                    stream().map(GrantedAuthority::getAuthority).toList();
-            if (roles != null && roles.getName().equals(UserRole.ADMINISTRADOR.name()) && !Objects.equals(auth.get(0), UserRole.ADMINISTRADOR.name())) {
-                throw new NotPermitDeleteAdmException(NOT_PERMITED_DELETE);
-            }
-        }
-        userRepository.deleteById(user.get().getId());
+        GenericValidAdministrator.verify(user.get().getPermissions(), new NotPermitDeleteAdmException(NOT_PERMITED_DELETE));
+//        for (Role roles : user.get().getPermissions()) {
+//            var auth = SecurityContextHolder.getContext().getAuthentication().getAuthorities().
+//                    stream().map(GrantedAuthority::getAuthority).toList();
+//            if (roles != null && roles.getName().equals(UserRole.ADMINISTRADOR.name()) && !Objects.equals(auth.get(0), UserRole.ADMINISTRADOR.name())) {
+//                throw new NotPermitDeleteAdmException(NOT_PERMITED_DELETE);
+//            }
+//        }
+
+      //  GenericValidAdministrator.verify(user, new NotPermitDeleteAdmException(NOT_PERMITED_DELETE));
+       // userRepository.deleteById(user.get().getId());
     }
 
     @Override
@@ -140,11 +144,15 @@ public class UserServiceImpl implements UserService {
         var entityUser = userRepository.findById(id_user)
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST));
 
-        for (Role roles : entityUser.getPermissions()) {
-            if (Objects.equals(roles, UserRole.ADMINISTRADOR.name())) {
-                throw new NotPermitDisableAdmException(NOT_PERMITED_DISABLE);
-            }
-        }
+        GenericValidAdministrator.verify(entityUser.getPermissions(), new NotPermitDeleteAdmException(NOT_PERMITED_DISABLE));
+
+//        for (Role roles : entityUser.getPermissions()) {
+//            var auth = SecurityContextHolder.getContext().getAuthentication().getAuthorities().
+//                    stream().map(GrantedAuthority::getAuthority).toList();
+//            if (roles != null && roles.getName().equals(UserRole.ADMINISTRADOR.name()) && !Objects.equals(auth.get(0), UserRole.ADMINISTRADOR.name())) {
+//                throw new NotPermitDeleteAdmException(NOT_PERMITED_DISABLE);
+//            }
+//        }
         entityUser.setAccountNonExpired(false);
         entityUser.setAccountNonLocked(false);
         entityUser.setCredentialsNonExpired(false);
