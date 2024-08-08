@@ -22,18 +22,18 @@ public class UserDTO {
     @MapsId("id_user")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer id;
-    @NotBlank(message = "O email não deve ser nulo ou vazio")
-    @Email(message = "email deve ser valido")
+    @NotBlank(message = "O  e-mail não deve ser nulo ou vazio")
+    @Email(message = "E-mail Invalido")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String email;
     @NotBlank(message = "A senha não deve ser nula ou vazia")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String password;
-    @NotBlank(message = "O telefone não deve ser nulo ou vazio")
+    @NotBlank(message = "Deve ser informado o Telefone")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String telefone;
     @NotBlank(message = "O cpf não deve ser nulo ou vazio")
-    @Size(min = 11, max = 11, message = "O cpf deve ter 11 digitos")
+    @Size(min = 11, max = 11, message = "O cpf deve conter 11 digitos")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String cpf;
     @JsonInclude(JsonInclude.Include.NON_NULL)

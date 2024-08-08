@@ -49,22 +49,18 @@ public class TokenAccessUser {
         var authHeader = request.getHeader("Authorization");
         if(authHeader == null) return   null;
         return authHeader.replace("Bearer " , "");
-
     }
-
     private DecodedJWT decodedToken(String token) {
         Algorithm alg = Algorithm.HMAC256(secret.getBytes());
         JWTVerifier verifier = JWT.require(alg).build();
         return verifier.verify(token);
     }
-
     public Authentication getAuthentication(String token) {
         DecodedJWT decodedJWT = decodedToken(token);
         UserDetails userDetails = this.userDetailsService
                 .loadUserByUsername(decodedJWT.getSubject());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
-
     public boolean validate(String token) {
         DecodedJWT decodedJWT = decodedToken(token);
         try {

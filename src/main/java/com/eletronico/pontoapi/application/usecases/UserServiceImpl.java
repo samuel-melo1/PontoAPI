@@ -23,10 +23,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.ALREDY_EXIST;
 import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.NOT_EXIST;
 import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.NOT_PERMITED_DELETE;
@@ -110,20 +112,9 @@ public class UserServiceImpl implements UserService {
     public void delete(Integer id) {
         LOG.info("delete users by id");
         var user = findUserById(id);
-
         GenericValidAdministrator.verify(user.get().getPermissions(), new NotPermitDeleteAdmException(NOT_PERMITED_DELETE));
-//        for (Role roles : user.get().getPermissions()) {
-//            var auth = SecurityContextHolder.getContext().getAuthentication().getAuthorities().
-//                    stream().map(GrantedAuthority::getAuthority).toList();
-//            if (roles != null && roles.getName().equals(UserRole.ADMINISTRADOR.name()) && !Objects.equals(auth.get(0), UserRole.ADMINISTRADOR.name())) {
-//                throw new NotPermitDeleteAdmException(NOT_PERMITED_DELETE);
-//            }
-//        }
-
-      //  GenericValidAdministrator.verify(user, new NotPermitDeleteAdmException(NOT_PERMITED_DELETE));
-       // userRepository.deleteById(user.get().getId());
+        userRepository.deleteById(user.get().getId());
     }
-
     @Override
     public UserDTO update(UserDTO dto) {
         LOG.info("updating users");
@@ -146,13 +137,6 @@ public class UserServiceImpl implements UserService {
 
         GenericValidAdministrator.verify(entityUser.getPermissions(), new NotPermitDeleteAdmException(NOT_PERMITED_DISABLE));
 
-//        for (Role roles : entityUser.getPermissions()) {
-//            var auth = SecurityContextHolder.getContext().getAuthentication().getAuthorities().
-//                    stream().map(GrantedAuthority::getAuthority).toList();
-//            if (roles != null && roles.getName().equals(UserRole.ADMINISTRADOR.name()) && !Objects.equals(auth.get(0), UserRole.ADMINISTRADOR.name())) {
-//                throw new NotPermitDeleteAdmException(NOT_PERMITED_DISABLE);
-//            }
-//        }
         entityUser.setAccountNonExpired(false);
         entityUser.setAccountNonLocked(false);
         entityUser.setCredentialsNonExpired(false);
