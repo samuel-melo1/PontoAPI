@@ -11,7 +11,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public enum SectionExceptionStatusError {
 
     ALREDY_EXIST("000", "Section alredy Exist. Please, try other!", CONFLICT),
-    NOT_FOUND_USER("001","Section Not Found!", NOT_FOUND);
+    NOT_FOUND_SECTOR("001","Section Not Found!", NOT_FOUND);
 
     private final String code;
     private final String message;

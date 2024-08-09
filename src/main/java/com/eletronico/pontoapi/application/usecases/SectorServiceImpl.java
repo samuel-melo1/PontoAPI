@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import static com.eletronico.pontoapi.core.enums.SectionExceptionStatusError.ALREDY_EXIST;
-import static com.eletronico.pontoapi.core.enums.SectionExceptionStatusError.NOT_FOUND_USER;
+import static com.eletronico.pontoapi.core.enums.SectionExceptionStatusError.NOT_FOUND_SECTOR;
 
 @Service
 @Slf4j
@@ -60,7 +60,7 @@ public class SectorServiceImpl implements SectorService {
     public Optional<SectorDTO> findSectorById(Integer id) {
         LOG.info("find users by id");
         var sector = Optional.ofNullable(repository.findById(id)
-                .orElseThrow(() -> new SectionNotFoundException(NOT_FOUND_USER)));
+                .orElseThrow(() -> new SectionNotFoundException(NOT_FOUND_SECTOR)));
 
         return Optional.ofNullable(MapperDTO.parseObject(Optional.of(sector.get()), SectorDTO.class));
     }
@@ -74,7 +74,7 @@ public class SectorServiceImpl implements SectorService {
     public void delete(Integer id) {
         LOG.info("delete sector by id");
         Optional<Sector> userExist = Optional.ofNullable(repository.findById(id)
-                .orElseThrow(() -> new SectionNotFoundException(NOT_FOUND_USER)));
+                .orElseThrow(() -> new SectionNotFoundException(NOT_FOUND_SECTOR)));
 
         repository.delete(userExist.get());
     }
@@ -84,7 +84,7 @@ public class SectorServiceImpl implements SectorService {
         LOG.info("updating users");
 
         Sector entity = repository.findByName(dto.getName())
-                .orElseThrow(() -> new SectionNotFoundException(NOT_FOUND_USER));
+                .orElseThrow(() -> new SectionNotFoundException(NOT_FOUND_SECTOR));
 
         entity.setName(dto.getName());
         entity.setStatus(dto.getStatus());
@@ -93,7 +93,7 @@ public class SectorServiceImpl implements SectorService {
     @Override
     public void disableSector(Integer id_user){
         var entity = repository.findById(id_user)
-                .orElseThrow(() -> new SectionNotFoundException(NOT_FOUND_USER));
+                .orElseThrow(() -> new SectionNotFoundException(NOT_FOUND_SECTOR));
 
         entity.setStatus(false);
         MapperDTO.parseObject(repository.save(entity), SectorDTO.class);
