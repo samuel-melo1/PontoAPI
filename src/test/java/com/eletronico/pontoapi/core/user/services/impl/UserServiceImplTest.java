@@ -12,13 +12,22 @@ import com.eletronico.pontoapi.core.exceptions.NotPermitDisableAdmException;
 import com.eletronico.pontoapi.core.exceptions.UserAlredyExistException;
 import com.eletronico.pontoapi.core.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,6 +37,9 @@ import static org.mockito.Mockito.*;
 import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.NOT_EXIST;
 
 @SpringBootTest
+@ContextConfiguration
+@ExtendWith(SpringExtension.class)
+@DisplayName("User Test Service")
 class UserServiceImplTest {
 
     @InjectMocks
@@ -49,7 +61,8 @@ class UserServiceImplTest {
         startMockUser();
     }
     @Test
-    void whenCreateUserThenReturnSuccess() {
+    @DisplayName("User created with success in service")
+    void testCreateUser_whenCreateUserThenReturnSuccess() {
         when(repository.existsPessoaByEmail(anyString())).thenReturn(false);
         when(repository.save(any())).thenReturn(user);
         when(mapper.map(any(User.class), any(Class.class))).thenReturn(userDto);
@@ -71,7 +84,8 @@ class UserServiceImplTest {
     }
 
     @Test
-    void whenCreateUserThenReturnUserAlredyExistException() {
+    @DisplayName("User already exist in service")
+    void whenCreateUserThenReturnUserAlreadyExistException() {
         when(repository.existsPessoaByEmail(anyString())).thenReturn(true);
 
         Exception thrown = assertThrows(UserAlredyExistException.class, () -> {
@@ -83,6 +97,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("Find user by email return success")
     void whenFindUserByEmailThenReturnAnUserInstance() {
         when(repository.findUserByEmail(anyString())).thenReturn(userOptional);
 
@@ -102,6 +117,7 @@ class UserServiceImplTest {
         verify(repository, times(1)).findUserByEmail(anyString());
     }
     @Test
+    @DisplayName("Find user by email return exception ")
     void whenFindUserByEmailThenReturnUserNotFoundException() {
         when(repository.findUserByEmail(anyString())).thenReturn(Optional.empty());
 
@@ -113,16 +129,20 @@ class UserServiceImplTest {
         assertEquals("User Not Found!", thrown.getMessage());
     }
     @Test
+    @WithMockUser
+    @DisplayName("Disable user return success")
     void whenDisableUserCadasterReturnSuccess() {
         when(repository.findById(anyInt())).thenReturn(userOptional);
         when(repository.save(any())).thenReturn(user);
         when(mapper.map(any(User.class), any(Class.class))).thenReturn(userDto);
+
 
         service.disableUser(1);
         verify(repository, times(1)).save(any());
         verify(repository, times(1)).findById(anyInt());
     }
     @Test
+    @DisplayName("Disable user return exception")
     void whenDisableUserCadasterThenReturnUserNotFoundException() {
         when(repository.findById(anyInt())).thenReturn(Optional.empty());
 
@@ -135,6 +155,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("Disable user when user is administrator return exception")
     void whenDisableUserCadasterThenReturnNotPermitedDeleteException() {
 
         User user1 = new User(1, "samuel@gmail.com", "samuel", "1234", "48996859940",
@@ -154,6 +175,7 @@ class UserServiceImplTest {
         assertEquals("User Not Found!", thrown.getMessage());
     }
     @Test
+    @DisplayName("updated user return success")
     void whenUpdateUserThenReturnSuccess() {
         when(repository.findUserByEmail(anyString())).thenReturn(userOptional);
         when(repository.save(any())).thenReturn(user);
@@ -171,6 +193,7 @@ class UserServiceImplTest {
         assertEquals("12256131912", response.getCpf());
     }
     @Test
+    @DisplayName("Update user return exception")
     void whenUpdateUserThenReturnUserNotFoundException() {
         when(repository.findUserByEmail(anyString())).thenThrow(new UserNotFoundException(NOT_EXIST));
 
@@ -184,6 +207,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("Delete user return success")
     void whenDeleteUserThenReturnSuccess() {
 
         when(repository.findById(anyInt())).thenReturn(userOptional);
@@ -195,6 +219,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("Delete user return exception")
     void whenDeleteUserThenReturnUserNotFoundException() {
         when(repository.findById(anyInt())).thenThrow(new UserNotFoundException(NOT_EXIST));
 
