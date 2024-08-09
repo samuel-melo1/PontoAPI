@@ -125,6 +125,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTO update(UserDTO dto, Integer id) {
         LOG.info("updating users");
 
@@ -149,6 +150,7 @@ public class UserServiceImpl implements UserService {
         return MapperDTO.parseObject(userRepository.save(userPersisted), UserDTO.class);
     }
 
+    @Transactional
     public void disableUser(Integer id_user) {
         var entityUser = userRepository.findById(id_user)
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST));
