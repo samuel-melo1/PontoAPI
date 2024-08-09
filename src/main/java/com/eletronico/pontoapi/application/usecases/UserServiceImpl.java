@@ -1,5 +1,12 @@
 package com.eletronico.pontoapi.application.usecases;
 
+import com.eletronico.pontoapi.core.domain.Position;
+import com.eletronico.pontoapi.core.domain.Sector;
+import com.eletronico.pontoapi.core.enums.PositionExceptionStatusError;
+import com.eletronico.pontoapi.core.enums.SectionExceptionStatusError;
+import com.eletronico.pontoapi.core.exceptions.*;
+import com.eletronico.pontoapi.infrastructure.persistence.PositionRepository;
+import com.eletronico.pontoapi.infrastructure.persistence.SectorRepository;
 import com.eletronico.pontoapi.infrastructure.persistence.UserRepository;
 import com.eletronico.pontoapi.utils.GenericValidAdministrator;
 import com.eletronico.pontoapi.utils.MapperDTO;
@@ -7,10 +14,6 @@ import com.eletronico.pontoapi.core.domain.Role;
 import com.eletronico.pontoapi.core.domain.User;
 import com.eletronico.pontoapi.entrypoint.dto.request.UserDTO;
 import com.eletronico.pontoapi.core.enums.UserRole;
-import com.eletronico.pontoapi.core.exceptions.NotPermitDeleteAdmException;
-import com.eletronico.pontoapi.core.exceptions.NotPermitDisableAdmException;
-import com.eletronico.pontoapi.core.exceptions.UserAlredyExistException;
-import com.eletronico.pontoapi.core.exceptions.UserNotFoundException;
 import com.eletronico.pontoapi.application.gateways.UserService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +43,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PositionRepository positionRepository;
+    @Autowired
+    private SectorRepository sectorRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class.getName());
@@ -107,6 +114,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
         return Optional.ofNullable(MapperDTO.parseObject(Optional.of(userExist.get()), UserDTO.class));
     }
+
     @Transactional
     @Override
     public void delete(Integer id) {
@@ -115,20 +123,30 @@ public class UserServiceImpl implements UserService {
         GenericValidAdministrator.verify(user.get().getPermissions(), new NotPermitDeleteAdmException(NOT_PERMITED_DELETE));
         userRepository.deleteById(user.get().getId());
     }
+
     @Override
-    public UserDTO update(UserDTO dto) {
+    public UserDTO update(UserDTO dto, Integer id) {
         LOG.info("updating users");
 
-        var entity = findUserByEmail(dto.getEmail());
-        entity.get().setEmail(dto.getEmail());
-        entity.get().setName(dto.getName());
-        entity.get().setTelefone(dto.getTelefone());
-        entity.get().setCpf(dto.getCpf());
-        entity.get().setPosition(dto.getPosition());
-        entity.get().setSector(dto.getSector());
-        entity.get().setPermissions(dto.getPermissions());
+        User userPersisted = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(NOT_EXIST));
 
-        return MapperDTO.parseObject(userRepository.save(entity.get()), UserDTO.class);
+        userPersisted.setEmail(dto.getEmail());
+        userPersisted.setName(dto.getName());
+        userPersisted.setTelefone(dto.getTelefone());
+        userPersisted.setCpf(dto.getCpf());
+        userPersisted.setStatus(dto.getStatus());
+
+        Position position = positionRepository.findById(dto.getPosition().getId_position())
+                        .orElseThrow(() -> new PositionNotFoundException(PositionExceptionStatusError.NOT_FOUND_POSITION));
+
+        Sector sector = sectorRepository.findById(dto.getSector().getId_sector())
+                        .orElseThrow(() -> new SectionNotFoundException(SectionExceptionStatusError.NOT_FOUND_SECTOR));
+
+        userPersisted.setPosition(position);
+        userPersisted.setSector(sector);
+        userPersisted.setPermissions(dto.getPermissions());
+        return MapperDTO.parseObject(userRepository.save(userPersisted), UserDTO.class);
     }
 
     public void disableUser(Integer id_user) {

@@ -15,7 +15,7 @@ public interface UserService {
 
     void delete(Integer id);
 
-    UserDTO update(UserDTO dto);
+    UserDTO update(UserDTO dto, Integer id);
 
     void disableUser(Integer id_user);
 

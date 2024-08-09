@@ -159,7 +159,7 @@ class UserServiceImplTest {
         when(repository.save(any())).thenReturn(user);
         when(mapper.map(any(User.class), any(Class.class))).thenReturn(userDto);
 
-        UserDTO response = service.update(userDto);
+        UserDTO response = service.update(userDto, 1);
 
         assertNotNull(response);
         assertEquals(UserDTO.class, response.getClass());
@@ -175,7 +175,7 @@ class UserServiceImplTest {
         when(repository.findUserByEmail(anyString())).thenThrow(new UserNotFoundException(NOT_EXIST));
 
         Exception thrown = assertThrows(UserNotFoundException.class, () -> {
-            service.update(userDto);
+            service.update(userDto, 1);
         });
 
         assertEquals(UserNotFoundException.class, thrown.getClass());

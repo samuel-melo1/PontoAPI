@@ -3,10 +3,13 @@ package com.eletronico.pontoapi.infrastructure.controllers;
 import com.eletronico.pontoapi.infrastructure.gateways.ResponseHandler;
 import com.eletronico.pontoapi.entrypoint.dto.request.UserDTO;
 import com.eletronico.pontoapi.application.gateways.UserService;
+import com.eletronico.pontoapi.utils.validation.OnCreate;
+import com.eletronico.pontoapi.utils.validation.OnUpdate;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +21,7 @@ public class UserController {
     @Autowired
     private UserService service;
     @PostMapping("/create-user")
-    public ResponseEntity<Object> saveUser(@RequestBody @Valid  UserDTO userDTO) {
+    public ResponseEntity<Object> saveUser(@Validated(OnCreate.class) @RequestBody @Valid  UserDTO userDTO) {
         service.saveUser(userDTO);
         return ResponseHandler.responseCreated("Created sucess", HttpStatus.OK);
     }
@@ -42,9 +45,9 @@ public class UserController {
         service.delete(id);
         return ResponseHandler.responseDelete("Delete Sucess", HttpStatus.OK);
     }
-    @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody @Valid UserDTO dto) {
-        return ResponseHandler.responseUpdate(service.update(dto), HttpStatus.OK);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Object> update(@Validated(OnUpdate.class)  @RequestBody @Valid UserDTO dto, @PathVariable("id") Integer id) {
+        return ResponseHandler.responseUpdate(service.update(dto, id), HttpStatus.OK);
     }
 
 }
