@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/sector/create").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
                         .requestMatchers(HttpMethod.GET, "/api/v1/sector/list-sectors").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
                         .requestMatchers(HttpMethod.GET, "/api/v1/sector/update/{name}").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/sector/list/{id}").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
                         .requestMatchers(HttpMethod.GET, "/api/v1/position/list-positions").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
                         .requestMatchers(HttpMethod.POST, "/api/v1/position/create").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
                         .requestMatchers(HttpMethod.POST, "/api/v1/role/create").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
