@@ -89,8 +89,8 @@ public class SectorServiceImpl implements SectorService {
         return MapperDTO.parseObject(repository.save(entity), SectorDTO.class);
     }
     @Override
-    public void disableSector(Integer id_user){
-        var entity = repository.findById(id_user)
+    public void disableSector(Integer id_sector){
+        var entity = repository.findById(id_sector)
                 .orElseThrow(() -> new SectorNotFoundException(NOT_FOUND_SECTOR));
 
         entity.setStatus(false);

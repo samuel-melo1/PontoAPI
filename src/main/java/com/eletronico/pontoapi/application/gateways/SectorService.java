@@ -15,6 +15,6 @@ public interface SectorService {
     Page<SectorDTO> list(Integer page, Integer pageSize);
     List<SectorDTO> listAll();
     void delete(Integer id);
-    void disableSector(Integer id_user);
+    void disableSector(Integer id_sector);
     Optional<SectorDTO> findSectorById(Integer id);
 }
