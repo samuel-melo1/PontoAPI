@@ -1,7 +1,7 @@
 package com.eletronico.pontoapi.core.exceptions.handler;
 
 import com.eletronico.pontoapi.core.exceptions.SectionAlredyExistException;
-import com.eletronico.pontoapi.core.exceptions.SectionNotFoundException;
+import com.eletronico.pontoapi.core.exceptions.SectorNotFoundException;
 import com.eletronico.pontoapi.infrastructure.gateways.RestErrorMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +17,8 @@ public class SectionExceptionHandler extends ResponseEntityExceptionHandler {
         RestErrorMessage err = new RestErrorMessage(Instant.now(), exception.getStatus().value(), exception.getMessage(), request.getRequestURI());
         return ResponseEntity.status(exception.getStatus()).body(err);
     }
-    @ExceptionHandler(SectionNotFoundException.class)
-    private ResponseEntity<RestErrorMessage> sectionNotFoundExistHandler(SectionNotFoundException exception, HttpServletRequest request) {
+    @ExceptionHandler(SectorNotFoundException.class)
+    private ResponseEntity<RestErrorMessage> sectionNotFoundExistHandler(SectorNotFoundException exception, HttpServletRequest request) {
         RestErrorMessage err = new RestErrorMessage(Instant.now(), exception.getStatus().value(), exception.getMessage(), request.getRequestURI());
         return ResponseEntity.status(exception.getStatus()).body(err);
     }

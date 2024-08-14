@@ -5,12 +5,10 @@ import com.eletronico.pontoapi.utils.MapperDTO;
 import com.eletronico.pontoapi.core.domain.Sector;
 import com.eletronico.pontoapi.entrypoint.dto.request.SectorDTO;
 import com.eletronico.pontoapi.core.exceptions.SectionAlredyExistException;
-import com.eletronico.pontoapi.core.exceptions.SectionNotFoundException;
+import com.eletronico.pontoapi.core.exceptions.SectorNotFoundException;
 import com.eletronico.pontoapi.application.gateways.SectorService;
-import com.eletronico.pontoapi.application.gateways.UserService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +24,8 @@ import static com.eletronico.pontoapi.core.enums.SectionExceptionStatusError.NOT
 @Service
 @Slf4j
 public class SectorServiceImpl implements SectorService {
+    private static final Logger LOG = LoggerFactory.getLogger(SectorServiceImpl.class.getName());
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserService.class.getName());
     @Autowired
     private SectorRepository repository;
 
@@ -60,7 +58,7 @@ public class SectorServiceImpl implements SectorService {
     public Optional<SectorDTO> findSectorById(Integer id) {
         LOG.info("find users by id");
         var sector = Optional.ofNullable(repository.findById(id)
-                .orElseThrow(() -> new SectionNotFoundException(NOT_FOUND_SECTOR)));
+                .orElseThrow(() -> new SectorNotFoundException(NOT_FOUND_SECTOR)));
 
         return Optional.ofNullable(MapperDTO.parseObject(Optional.of(sector.get()), SectorDTO.class));
     }
@@ -74,17 +72,17 @@ public class SectorServiceImpl implements SectorService {
     public void delete(Integer id) {
         LOG.info("delete sector by id");
         Optional<Sector> userExist = Optional.ofNullable(repository.findById(id)
-                .orElseThrow(() -> new SectionNotFoundException(NOT_FOUND_SECTOR)));
+                .orElseThrow(() -> new SectorNotFoundException(NOT_FOUND_SECTOR)));
 
         repository.delete(userExist.get());
     }
     @Override
     @Transactional
-    public SectorDTO update(SectorDTO dto) {
+    public SectorDTO update(SectorDTO dto, String name) {
         LOG.info("updating users");
 
-        Sector entity = repository.findByName(dto.getName())
-                .orElseThrow(() -> new SectionNotFoundException(NOT_FOUND_SECTOR));
+        var entity = repository.findByName(name)
+                .orElseThrow(() -> new SectorNotFoundException(NOT_FOUND_SECTOR));
 
         entity.setName(dto.getName());
         entity.setStatus(dto.getStatus());
@@ -93,7 +91,7 @@ public class SectorServiceImpl implements SectorService {
     @Override
     public void disableSector(Integer id_user){
         var entity = repository.findById(id_user)
-                .orElseThrow(() -> new SectionNotFoundException(NOT_FOUND_SECTOR));
+                .orElseThrow(() -> new SectorNotFoundException(NOT_FOUND_SECTOR));
 
         entity.setStatus(false);
         MapperDTO.parseObject(repository.save(entity), SectorDTO.class);

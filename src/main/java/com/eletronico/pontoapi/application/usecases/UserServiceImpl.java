@@ -10,10 +10,8 @@ import com.eletronico.pontoapi.infrastructure.persistence.SectorRepository;
 import com.eletronico.pontoapi.infrastructure.persistence.UserRepository;
 import com.eletronico.pontoapi.utils.GenericValidAdministrator;
 import com.eletronico.pontoapi.utils.MapperDTO;
-import com.eletronico.pontoapi.core.domain.Role;
 import com.eletronico.pontoapi.core.domain.User;
 import com.eletronico.pontoapi.entrypoint.dto.request.UserDTO;
-import com.eletronico.pontoapi.core.enums.UserRole;
 import com.eletronico.pontoapi.application.gateways.UserService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +20,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -142,7 +137,7 @@ public class UserServiceImpl implements UserService {
                         .orElseThrow(() -> new PositionNotFoundException(PositionExceptionStatusError.NOT_FOUND_POSITION));
 
         Sector sector = sectorRepository.findById(dto.getSector().getId_sector())
-                        .orElseThrow(() -> new SectionNotFoundException(SectionExceptionStatusError.NOT_FOUND_SECTOR));
+                        .orElseThrow(() -> new SectorNotFoundException(SectionExceptionStatusError.NOT_FOUND_SECTOR));
 
         userPersisted.setPosition(position);
         userPersisted.setSector(sector);

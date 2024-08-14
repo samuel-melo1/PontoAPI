@@ -49,8 +49,8 @@ public class SectorController {
         service.delete(id);
         return ResponseHandler.responseDelete("Delete Sucess", HttpStatus.OK);
     }
-    @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody @Valid SectorDTO dto) {
-        return ResponseHandler.responseUpdate(service.update(dto), HttpStatus.OK);
+    @PutMapping("/update/{name}")
+    public ResponseEntity<Object> update(@RequestBody @Valid SectorDTO dto, @PathVariable("name") String name) {
+        return ResponseHandler.responseUpdate(service.update(dto, name), HttpStatus.OK);
     }
 }

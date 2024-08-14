@@ -18,8 +18,6 @@ import java.util.List;
 @Data
 @Builder
 public class SectorDTO implements Serializable {
-    @NotNull
-    @NotEmpty
     @JsonIgnore
     private List<Sector> sectors;
 

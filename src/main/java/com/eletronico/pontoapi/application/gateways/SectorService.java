@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface SectorService {
 
     SectorDTO create(List<Sector> sectors);
-    SectorDTO update(SectorDTO dto);
+    SectorDTO update(SectorDTO dto, String name);
     Page<SectorDTO> list(Integer page, Integer pageSize);
     List<SectorDTO> listAll();
     void delete(Integer id);

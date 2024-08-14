@@ -5,9 +5,9 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class SectionNotFoundException extends RuntimeException{
+public class SectorNotFoundException extends RuntimeException{
     private final HttpStatus status;
-    public SectionNotFoundException(SectionExceptionStatusError error){
+    public SectorNotFoundException(SectionExceptionStatusError error){
         super(error.getMessage());
         this.status = error.getStatus();
     }
