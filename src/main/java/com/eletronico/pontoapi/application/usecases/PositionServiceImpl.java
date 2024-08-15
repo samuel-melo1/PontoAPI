@@ -1,5 +1,6 @@
 package com.eletronico.pontoapi.application.usecases;
 
+import com.eletronico.pontoapi.core.exceptions.DataIntegrityException;
 import com.eletronico.pontoapi.infrastructure.persistence.PositionRepository;
 import com.eletronico.pontoapi.utils.MapperDTO;
 import com.eletronico.pontoapi.core.domain.Position;
@@ -13,12 +14,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+
+import static com.eletronico.pontoapi.core.enums.DataIntegrityViolationError.NOT_PERMIT_DELETE;
 import static com.eletronico.pontoapi.core.enums.PositionExceptionStatusError.NOT_FOUND_POSITION;
 
 @Service
@@ -71,7 +75,13 @@ public class PositionServiceImpl implements PositionService {
        var entity = Optional.ofNullable(repository.findById(id)
                 .orElseThrow(() -> new PositionNotFoundException(NOT_FOUND_POSITION)));
 
-        repository.delete(entity.get());
+       try {
+           repository.delete(entity.get());
+           repository.flush();
+       } catch (DataIntegrityViolationException e) {
+           throw new DataIntegrityException(NOT_PERMIT_DELETE);
+       }
+
     }
     @Transactional
     @Override

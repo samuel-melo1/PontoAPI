@@ -28,7 +28,7 @@ public class SectorController {
     @PostMapping("/disable/{id}")
     public ResponseEntity<Object> disable(@PathVariable("id") Integer id) {
         service.disableSector(id);
-        return ResponseHandler.responseDelete("Disable Position Sucess", HttpStatus.OK);
+        return ResponseHandler.responseDelete("Disable Sector Sucess", HttpStatus.OK);
     }
 
     @GetMapping("/list-sectors")

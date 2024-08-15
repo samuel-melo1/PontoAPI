@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/sector/list/{id}").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
                         .requestMatchers(HttpMethod.GET, "/api/v1/position/list-positions").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
                         .requestMatchers(HttpMethod.POST, "/api/v1/position/create").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/position/delete/{id}").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
                         .requestMatchers(HttpMethod.POST, "/api/v1/role/create").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
                         .requestMatchers(HttpMethod.GET, "/api/v1/role/list-roles").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
                         .requestMatchers(HttpMethod.POST, "/api/auth/forgot-password").permitAll()
