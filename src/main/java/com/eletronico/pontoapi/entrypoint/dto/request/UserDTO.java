@@ -44,7 +44,6 @@ public class UserDTO {
     @NotBlank(message = "O nome não deve ser nulo ou vazio", groups = {OnCreate.class, OnUpdate.class})
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Position position;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Sector sector;

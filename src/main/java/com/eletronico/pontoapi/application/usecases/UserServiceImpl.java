@@ -39,10 +39,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private PositionRepository positionRepository;
-    @Autowired
-    private SectorRepository sectorRepository;
-    @Autowired
     private PasswordEncoder passwordEncoder;
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class.getName());
 
@@ -132,15 +128,10 @@ public class UserServiceImpl implements UserService {
         userPersisted.setTelefone(dto.getTelefone());
         userPersisted.setCpf(dto.getCpf());
         userPersisted.setStatus(dto.getStatus());
+        LOG.info("user persisted ");
 
-        Position position = positionRepository.findById(dto.getPosition().getId_position())
-                        .orElseThrow(() -> new PositionNotFoundException(PositionExceptionStatusError.NOT_FOUND_POSITION));
-
-        Sector sector = sectorRepository.findById(dto.getSector().getId_sector())
-                        .orElseThrow(() -> new SectorNotFoundException(SectionExceptionStatusError.NOT_FOUND_SECTOR));
-
-        userPersisted.setPosition(position);
-        userPersisted.setSector(sector);
+        userPersisted.setPosition(dto.getPosition());
+        userPersisted.setSector(dto.getSector());
         userPersisted.setPermissions(dto.getPermissions());
         return MapperDTO.parseObject(userRepository.save(userPersisted), UserDTO.class);
     }
