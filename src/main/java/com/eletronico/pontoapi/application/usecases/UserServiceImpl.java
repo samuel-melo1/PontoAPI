@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    // @Cacheable("users")
+     @Cacheable("users")
     public List<UserDTO> listUser(Integer page, Integer pageSize) {
         return MapperDTO.parseListObjects(
                 userRepository.findAll(PageRequest.of(page, pageSize))
