@@ -1,6 +1,8 @@
 package com.eletronico.pontoapi.utils.agendador;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -21,4 +23,21 @@ public class CacheScheduled {
     public void cleanerCacheTotalElements(){
         log.info("Executado Cache (Total Elements): " + LocalDateTime.now());
     }
+    @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.SECONDS)
+    @CacheEvict(cacheNames = {"listSectors", "listAllSectors"}, allEntries=true )
+    public void cleanerCacheListSectors(){
+        log.info("Executado Cache (List Sectors): "  + LocalDateTime.now());
+    }
+    @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.SECONDS)
+    @CacheEvict(cacheNames = {"listPositions", "listAllPositions"}, allEntries=true )
+    public void cleanerCacheListPositions(){
+        log.info("Executado Cache (List Positions): "  + LocalDateTime.now());
+    }
+    @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.SECONDS)
+    @CacheEvict(cacheNames = "listRoles", allEntries=true )
+    public void cleanerCacheListRoles(){
+        log.info("Executado Cache (List Roles): "  + LocalDateTime.now());
+    }
+
+
 }

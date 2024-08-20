@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +45,7 @@ public class SectorServiceImpl implements SectorService {
     }
 
     @Override
+    @Cacheable("listSectors")
     public Page<SectorDTO> list(Integer page, Integer pageSize) {
         Pageable pages = PageRequest.of(page, pageSize);
         Page<Sector> pagedResult = repository.findAll(pages);
@@ -63,6 +65,7 @@ public class SectorServiceImpl implements SectorService {
         return Optional.ofNullable(MapperDTO.parseObject(Optional.of(sector.get()), SectorDTO.class));
     }
     @Override
+    @Cacheable("listAllSectors")
     public List<SectorDTO> listAll() {
         return MapperDTO.parseListObjects(repository.findAll(), SectorDTO.class);
     }
