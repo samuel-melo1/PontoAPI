@@ -1,12 +1,8 @@
 package com.eletronico.pontoapi.application.usecases;
 
-import com.eletronico.pontoapi.core.domain.Position;
-import com.eletronico.pontoapi.core.domain.Sector;
-import com.eletronico.pontoapi.core.enums.PositionExceptionStatusError;
-import com.eletronico.pontoapi.core.enums.SectionExceptionStatusError;
-import com.eletronico.pontoapi.core.exceptions.*;
-import com.eletronico.pontoapi.infrastructure.persistence.PositionRepository;
-import com.eletronico.pontoapi.infrastructure.persistence.SectorRepository;
+import com.eletronico.pontoapi.core.exceptions.NotPermitDeleteAdmException;
+import com.eletronico.pontoapi.core.exceptions.UserAlredyExistException;
+import com.eletronico.pontoapi.core.exceptions.UserNotFoundException;
 import com.eletronico.pontoapi.infrastructure.persistence.UserRepository;
 import com.eletronico.pontoapi.utils.GenericValidAdministrator;
 import com.eletronico.pontoapi.utils.MapperDTO;
@@ -22,11 +18,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.ALREDY_EXIST;
 import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.NOT_EXIST;
 import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.NOT_PERMITED_DELETE;

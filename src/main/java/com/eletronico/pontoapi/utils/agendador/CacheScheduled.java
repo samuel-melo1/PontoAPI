@@ -1,12 +1,9 @@
 package com.eletronico.pontoapi.utils.agendador;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
@@ -38,6 +35,4 @@ public class CacheScheduled {
     public void cleanerCacheListRoles(){
         log.info("Executado Cache (List Roles): "  + LocalDateTime.now());
     }
-
-
 }
