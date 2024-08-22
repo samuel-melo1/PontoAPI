@@ -1,8 +1,12 @@
 package com.eletronico.pontoapi.config.tokenConfig;
 
 
+import com.eletronico.pontoapi.core.domain.Role;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class TokenVO implements Serializable {
@@ -13,17 +17,20 @@ public class TokenVO implements Serializable {
     private Date expiration;
     private String accessToken;
     private String refreshToken;
+    private List<String> roles;
+
 
     public TokenVO(){
     }
 
-    public TokenVO(String username, Boolean authenticated, Date created, Date expiration, String accessToken, String refreshToken) {
+    public TokenVO(String username, Boolean authenticated, Date created, Date expiration, String accessToken, String refreshToken, List<String> roles) {
         this.username = username;
         this.authenticated = authenticated;
         this.created = created;
         this.expiration = expiration;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.roles = new ArrayList<>();
     }
 
     public String getUsername() {
@@ -74,16 +81,24 @@ public class TokenVO implements Serializable {
         this.refreshToken = refreshToken;
     }
 
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TokenVO tokenVO = (TokenVO) o;
-        return Objects.equals(getUsername(), tokenVO.getUsername()) && Objects.equals(getAuthenticated(), tokenVO.getAuthenticated()) && Objects.equals(getCreated(), tokenVO.getCreated()) && Objects.equals(getExpiration(), tokenVO.getExpiration()) && Objects.equals(getAccessToken(), tokenVO.getAccessToken()) && Objects.equals(getRefreshToken(), tokenVO.getRefreshToken());
+        return Objects.equals(getUsername(), tokenVO.getUsername()) && Objects.equals(getAuthenticated(), tokenVO.getAuthenticated()) && Objects.equals(getCreated(), tokenVO.getCreated()) && Objects.equals(getExpiration(), tokenVO.getExpiration()) && Objects.equals(getAccessToken(), tokenVO.getAccessToken()) && Objects.equals(getRefreshToken(), tokenVO.getRefreshToken()) && Objects.equals(getRoles(), tokenVO.getRoles());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUsername(), getAuthenticated(), getCreated(), getExpiration(), getAccessToken(), getRefreshToken());
+        return Objects.hash(getUsername(), getAuthenticated(), getCreated(), getExpiration(), getAccessToken(), getRefreshToken(), getRoles());
     }
 }

@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/v2/login/signin").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/user/create-user").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
                         .requestMatchers(HttpMethod.GET, "/api/v1/user/list-users").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/user/update").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
