@@ -10,8 +10,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @AllArgsConstructor
 public enum SectionExceptionStatusError {
 
-    ALREDY_EXIST("000", "Section alredy Exist. Please, try other!", CONFLICT),
-    NOT_FOUND_SECTOR("001","Section Not Found!", NOT_FOUND);
+    ALREDY_EXIST("000", "Setor já existe. É necessário a criação de outro!", CONFLICT),
+    NOT_FOUND_SECTOR("001","Setor não encontrado!", NOT_FOUND);
 
     private final String code;
     private final String message;

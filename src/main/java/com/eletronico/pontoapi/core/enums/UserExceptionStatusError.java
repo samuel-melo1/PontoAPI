@@ -12,10 +12,10 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @AllArgsConstructor
 public enum UserExceptionStatusError {
 
-    ALREDY_EXIST("000", "User alredy Exist. Please, try other!", CONFLICT),
-    NOT_EXIST("001","User Not Found!", NOT_FOUND),
-    NOT_PERMITED_DELETE("002", "Administrador cannot be deleted", BAD_REQUEST),
-    NOT_PERMITED_DISABLE("003", "Administrador cannot be disable", BAD_REQUEST);
+    ALREDY_EXIST("000", "Usuário já existe. É necessário a criação de outro!", CONFLICT),
+    NOT_EXIST("001","Usuário não encontrado", NOT_FOUND),
+    NOT_PERMITED_DELETE("002", "Administrador não pode ser deletado!", BAD_REQUEST),
+    NOT_PERMITED_DISABLE("003", "Administrador não pode ser desabilitado!", BAD_REQUEST);
 
     private final String code;
     private final String message;
