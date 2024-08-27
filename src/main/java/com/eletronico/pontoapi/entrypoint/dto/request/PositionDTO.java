@@ -18,8 +18,6 @@ import java.util.List;
 @Data
 public class PositionDTO {
 
-    @NotNull
-    @NotEmpty
     @JsonIgnore
     private List<Position> positions;
 

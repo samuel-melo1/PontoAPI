@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.Instant;
 
 @ControllerAdvice
-@Slf4j
 public class PositionExceptionHandler {
     @ExceptionHandler(PositionAlredyExistException.class)
     private ResponseEntity<RestErrorMessage> positionAlredyExistHandler(PositionAlredyExistException exception, HttpServletRequest request) {

@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 @Getter
-@Slf4j
 public class NotPermitDeleteAdmException extends RuntimeException {
     private final HttpStatus httpStatus;
     public NotPermitDeleteAdmException(UserExceptionStatusError error) {

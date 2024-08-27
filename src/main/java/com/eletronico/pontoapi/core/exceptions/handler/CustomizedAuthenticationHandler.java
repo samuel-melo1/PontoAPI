@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
-@Slf4j
 @ControllerAdvice
 public class CustomizedAuthenticationHandler {
     @ExceptionHandler(InvalidJwtAuthenticationException.class)
