@@ -2,18 +2,7 @@ package com.eletronico.pontoapi.core.domain;
 
 import com.eletronico.pontoapi.core.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -62,6 +51,9 @@ public class User implements UserDetails, Serializable {
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> permissions = new ArrayList<>();
+
+    @OneToMany
+    private List<RegistroPonto> pontos = new ArrayList<>();
     public List<String> getRoles(){
         List<String> roles = new ArrayList<>();
         for (Role permission : permissions){
@@ -83,18 +75,18 @@ public class User implements UserDetails, Serializable {
     }
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return this.accountNonExpired;
     }
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.accountNonLocked;
     }
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return this.credentialsNonExpired;
     }
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.enabled;
     }
 }
