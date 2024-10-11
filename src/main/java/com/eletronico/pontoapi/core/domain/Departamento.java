@@ -15,14 +15,14 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Sector implements Serializable {
+public class Departamento implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_sector;
+    private Integer id_departamento;
     private String name;
     private Boolean status;
     @JsonIgnore
-    @OneToMany(mappedBy = "sector")
+    @OneToMany(mappedBy = "departamento")
     private List<User> users = new ArrayList<>();
 }

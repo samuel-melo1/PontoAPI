@@ -1,10 +1,8 @@
 package com.eletronico.pontoapi.entrypoint.dto.request;
 
-import com.eletronico.pontoapi.core.domain.Sector;
+import com.eletronico.pontoapi.core.domain.Departamento;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,12 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
-public class SectorDTO implements Serializable {
+public class DepartamentoDTO implements Serializable {
     @JsonIgnore
-    private List<Sector> sectors;
+    private List<Departamento> departamentos;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer id_sector;
+    private Integer id_departamento;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
     @JsonInclude(JsonInclude.Include.NON_NULL)

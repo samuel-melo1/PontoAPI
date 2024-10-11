@@ -1,16 +1,14 @@
 package com.eletronico.pontoapi.core.exceptions;
 
-import com.eletronico.pontoapi.core.enums.SectionExceptionStatusError;
+import com.eletronico.pontoapi.core.enums.DepartamentoExceptionStatusError;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class SectionAlredyExistException extends RuntimeException {
-
+public class DepartamentoNotFoundException extends RuntimeException{
     private final HttpStatus status;
-    public SectionAlredyExistException(SectionExceptionStatusError error){
+    public DepartamentoNotFoundException(DepartamentoExceptionStatusError error){
         super(error.getMessage());
         this.status = error.getStatus();
     }
 }
-
