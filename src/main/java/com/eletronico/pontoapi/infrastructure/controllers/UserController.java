@@ -23,11 +23,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/api/v1/user")
+@RequestMapping(value = "/users")
 public class UserController {
     @Autowired
     private UserService service;
-    @PostMapping("/create-user")
+    @PostMapping("/create")
     public ResponseEntity<Object> saveUser(@Validated(OnCreate.class) @RequestBody @Valid  UserDTO userDTO) {
         service.saveUser(userDTO);
         return ResponseHandler.responseCreated("Created sucess", HttpStatus.OK);
@@ -38,12 +38,12 @@ public class UserController {
         return ResponseHandler.responseDelete("Disable User Sucess", HttpStatus.OK);
     }
 
-    @GetMapping("/list-users")
-    public ResponseEntity<List<UserDTO>> getUserList(@RequestParam(name = "page", defaultValue = "0") int page,
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> findAll(@RequestParam(name = "page", defaultValue = "0") int page,
                                                      @RequestParam(name = "size", defaultValue = "10") int size) {
         return new ResponseEntity<>(service.listUser(page, size), HttpStatus.OK);
     }
-    @GetMapping("/list/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Optional<UserDTO>> findByID(@PathVariable("id") Integer id){
         return  ResponseEntity.ok(service.findUserById(id));
     }

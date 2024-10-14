@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.io.Serializable;
@@ -31,7 +32,8 @@ public class User implements UserDetails, Serializable {
     private String name;
     private String password;
     private String telefone;
-    @Column(name = "cpf", length = 14, unique = true)
+    @Column(name = "cpf", unique = true)
+    @CPF
     private String cpf;
     private Boolean status;
     @JsonIgnore
@@ -41,19 +43,17 @@ public class User implements UserDetails, Serializable {
     private Boolean credentialsNonExpired;
     private Boolean enabled;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "position_id")
-    private Position position;
+    @JoinColumn(name = "cargo_id")
+    private Cargo cargo;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "sector_id")
-    private Sector sector;
+    @JoinColumn(name = "departamento_id")
+    private Departamento departamento;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "tb_users_role",
-            joinColumns = @JoinColumn(name = "users_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_role"))
     private List<Role> permissions = new ArrayList<>();
 
-    @OneToMany
-    private List<RegistroPonto> pontos = new ArrayList<>();
     public List<String> getRoles(){
         List<String> roles = new ArrayList<>();
         for (Role permission : permissions){
@@ -75,18 +75,18 @@ public class User implements UserDetails, Serializable {
     }
     @Override
     public boolean isAccountNonExpired() {
-        return this.accountNonExpired;
+        return true;
     }
     @Override
     public boolean isAccountNonLocked() {
-        return this.accountNonLocked;
+        return true;
     }
     @Override
     public boolean isCredentialsNonExpired() {
-        return this.credentialsNonExpired;
+        return true;
     }
     @Override
     public boolean isEnabled() {
-        return this.enabled;
+        return true;
     }
 }

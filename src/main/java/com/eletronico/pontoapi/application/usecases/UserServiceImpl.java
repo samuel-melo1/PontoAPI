@@ -1,8 +1,8 @@
 package com.eletronico.pontoapi.application.usecases;
 
 import com.eletronico.pontoapi.core.exceptions.NotPermitDeleteAdmException;
-import com.eletronico.pontoapi.core.exceptions.UserAlredyExistException;
-import com.eletronico.pontoapi.core.exceptions.UserNotFoundException;
+import com.eletronico.pontoapi.core.exceptions.ObjectAlreadyExistException;
+import com.eletronico.pontoapi.core.exceptions.ObjectNotFoundException;
 import com.eletronico.pontoapi.infrastructure.persistence.UserRepository;
 import com.eletronico.pontoapi.utils.GenericValidAdministrator;
 import com.eletronico.pontoapi.utils.MapperDTO;
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         LOG.info("creating a new user");
 
         if (userRepository.existsPessoaByEmail(userDTO.getEmail())) {
-            throw new UserAlredyExistException(ALREDY_EXIST);
+            throw new ObjectAlreadyExistException(ALREDY_EXIST);
         }
         User newUser = User.builder()
                 .email(userDTO.getEmail())
@@ -51,8 +51,8 @@ public class UserServiceImpl implements UserService {
                 .telefone(userDTO.getTelefone())
                 .status(true)
                 .cpf(userDTO.getCpf())
-                .position(userDTO.getPosition())
-                .sector(userDTO.getSector())
+                .cargo(userDTO.getCargo())
+                .departamento(userDTO.getDepartamento())
                 .name(userDTO.getName())
                 .permissions(userDTO.getPermissions()).build();
         return MapperDTO.parseObject(userRepository.save(newUser), UserDTO.class);
@@ -72,8 +72,8 @@ public class UserServiceImpl implements UserService {
                                 .cpf(user.getCpf())
                                 .status(user.getStatus())
                                 .name(user.getName())
-                                .position(user.getPosition())
-                                .sector(user.getSector())
+                                .cargo(user.getCargo())
+                                .departamento(user.getDepartamento())
                                 .userRole(user.getUserRole())
                                 .permissions(user.getPermissions())
                                 .totalElements(findTotalElementsInDataBase()).build()).collect(Collectors.toList()), UserDTO.class);
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findUserByEmail(String email) {
         LOG.info("find users by email");
         var userExist = Optional.ofNullable(userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
+                .orElseThrow(() -> new ObjectNotFoundException(NOT_EXIST)));
         return Optional.of(userExist.get());
     }
 
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
     public Optional<UserDTO> findUserById(Integer id) {
         LOG.info("find users by id");
         var userExist = Optional.ofNullable(userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(NOT_EXIST)));
+                .orElseThrow(() -> new ObjectNotFoundException(NOT_EXIST)));
         return Optional.ofNullable(MapperDTO.parseObject(Optional.of(userExist.get()), UserDTO.class));
     }
 
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
         LOG.info("updating users");
 
         User userPersisted = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(NOT_EXIST));
+                .orElseThrow(() -> new ObjectNotFoundException(NOT_EXIST));
 
         userPersisted.setEmail(dto.getEmail());
         userPersisted.setName(dto.getName());
@@ -124,8 +124,8 @@ public class UserServiceImpl implements UserService {
         userPersisted.setStatus(dto.getStatus());
         LOG.info("user persisted ");
 
-        userPersisted.setPosition(dto.getPosition());
-        userPersisted.setSector(dto.getSector());
+        userPersisted.setCargo(dto.getCargo());
+        userPersisted.setDepartamento(dto.getDepartamento());
         userPersisted.setPermissions(dto.getPermissions());
         return MapperDTO.parseObject(userRepository.save(userPersisted), UserDTO.class);
     }
@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void disableUser(Integer id_user) {
         var entityUser = userRepository.findById(id_user)
-                .orElseThrow(() -> new UserNotFoundException(NOT_EXIST));
+                .orElseThrow(() -> new ObjectNotFoundException(NOT_EXIST));
 
         GenericValidAdministrator.verify(entityUser.getPermissions(), new NotPermitDeleteAdmException(NOT_PERMITED_DISABLE));
 
