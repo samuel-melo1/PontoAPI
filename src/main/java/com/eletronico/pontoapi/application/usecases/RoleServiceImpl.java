@@ -1,18 +1,18 @@
 package com.eletronico.pontoapi.application.usecases;
 
+import com.eletronico.pontoapi.core.exceptions.ObjectAlreadyExistException;
 import com.eletronico.pontoapi.infrastructure.persistence.RoleRepository;
 import com.eletronico.pontoapi.utils.MapperDTO;
 import com.eletronico.pontoapi.core.domain.Role;
 import com.eletronico.pontoapi.entrypoint.dto.request.RoleDTO;
 import com.eletronico.pontoapi.application.gateways.RoleService;
-import com.eletronico.pontoapi.core.exceptions.SectionAlredyExistException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import static com.eletronico.pontoapi.core.enums.SectionExceptionStatusError.ALREDY_EXIST;
+import static com.eletronico.pontoapi.core.enums.DepartamentoExceptionStatusError.ALREDY_EXIST;
 
 @Service
 @Slf4j
@@ -24,9 +24,9 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDTO create(RoleDTO dto){
 
-        var entity = repository.findById(dto.getCode());
+        var entity = repository.findByName(dto.getName());
         if (entity.isPresent()) {
-            throw new SectionAlredyExistException(ALREDY_EXIST);
+            throw new ObjectAlreadyExistException(ALREDY_EXIST);
         }
         Role newRole = Role.builder()
                 .name(dto.getName()).build();

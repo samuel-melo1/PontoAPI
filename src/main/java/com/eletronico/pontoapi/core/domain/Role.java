@@ -18,6 +18,7 @@ public class Role implements GrantedAuthority, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_role;
+    @Column(unique = true)
     private String name;
     @Override
     public String getAuthority() {
