@@ -1,6 +1,6 @@
 package com.eletronico.pontoapi.core.exceptions;
 
-import com.eletronico.pontoapi.core.enums.CargoExceptionStatusError;
+
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -8,8 +8,9 @@ import org.springframework.http.HttpStatus;
 public class ObjectAlreadyExistException extends RuntimeException {
 
     private final HttpStatus status;
-    public ObjectAlreadyExistException(CargoExceptionStatusError error){
-        super(error.getMessage());
-        this.status = error.getStatus();
+
+    public ObjectAlreadyExistException(IDomainErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.status = errorCode.getStatus();
     }
 }

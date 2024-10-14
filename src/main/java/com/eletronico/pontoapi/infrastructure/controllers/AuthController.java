@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Authentication Endpoint")
 @RestController
-@RequestMapping("/api/auth/v2/login")
+@RequestMapping("/api/auth/login")
 public class AuthController {
 
     @Autowired

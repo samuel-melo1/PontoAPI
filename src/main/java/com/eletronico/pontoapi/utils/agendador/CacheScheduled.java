@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class CacheScheduled {
+
+    /*
     @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.SECONDS)
     @CacheEvict(cacheNames = "users", allEntries=true)
     public void cleanerCacheUsers(){
@@ -34,5 +36,5 @@ public class CacheScheduled {
     @CacheEvict(cacheNames = "listRoles", allEntries=true )
     public void cleanerCacheListRoles(){
         log.info("Executado Cache (List Roles): "  + LocalDateTime.now());
-    }
+    }*/
 }

@@ -1,5 +1,6 @@
-package com.eletronico.pontoapi.core.exceptions;
+package com.eletronico.pontoapi.core.exceptions.interceptor;
 
+import com.eletronico.pontoapi.core.exceptions.IDomainErrorCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;

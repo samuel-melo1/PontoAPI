@@ -1,11 +1,12 @@
 package com.eletronico.pontoapi.application.usecases;
 
 import com.eletronico.pontoapi.core.domain.Departamento;
+import com.eletronico.pontoapi.core.exceptions.interceptor.InterceptorException;
+import com.eletronico.pontoapi.core.exceptions.ObjectAlreadyExistException;
+import com.eletronico.pontoapi.core.exceptions.ObjectNotFoundException;
 import com.eletronico.pontoapi.infrastructure.persistence.DepartamentoRepository;
 import com.eletronico.pontoapi.utils.MapperDTO;
 import com.eletronico.pontoapi.entrypoint.dto.request.DepartamentoDTO;
-import com.eletronico.pontoapi.core.exceptions.DepartamentoAlredyExistException;
-import com.eletronico.pontoapi.core.exceptions.DepartamentoNotFoundException;
 import com.eletronico.pontoapi.application.gateways.DepartamentoService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ import static com.eletronico.pontoapi.core.enums.DepartamentoExceptionStatusErro
 
 @Service
 @Slf4j
-public class DepartamentoServiceImpl implements DepartamentoService {
+public class DepartamentoServiceImpl extends InterceptorException<Departamento> implements DepartamentoService {
     private static final Logger LOG = LoggerFactory.getLogger(DepartamentoServiceImpl.class.getName());
 
     @Autowired
@@ -37,7 +38,7 @@ public class DepartamentoServiceImpl implements DepartamentoService {
         for (Departamento departamento : departamentos) {
             var entity = repository.findByName(departamento.getName());
             if (entity.isPresent()) {
-                throw new DepartamentoAlredyExistException(ALREDY_EXIST);
+                throw new ObjectAlreadyExistException(ALREDY_EXIST);
             }
             departamento.setStatus(true);
         }
@@ -59,20 +60,21 @@ public class DepartamentoServiceImpl implements DepartamentoService {
     @Override
     public Optional<DepartamentoDTO> findSectorById(Integer id) {
         LOG.info("find users by id");
-        var sector = Optional.ofNullable(repository.findById(id)
-                .orElseThrow(() -> new DepartamentoNotFoundException(NOT_FOUND_SECTOR)));
+        var departamento = Optional.ofNullable(repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(NOT_FOUND_SECTOR)));
 
-        return Optional.ofNullable(MapperDTO.parseObject(Optional.of(sector.get()), DepartamentoDTO.class));
+        return Optional.ofNullable(MapperDTO.parseObject(Optional.of(departamento.get()), DepartamentoDTO.class));
     }
 
     @Transactional
     @Override
     public void delete(Integer id) {
         LOG.info("delete departamento by id");
-        Optional<Departamento> userExist = Optional.ofNullable(repository.findById(id)
-                .orElseThrow(() -> new DepartamentoNotFoundException(NOT_FOUND_SECTOR)));
+        var departamento = Optional.ofNullable(repository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(NOT_FOUND_SECTOR)));
 
-        repository.delete(userExist.get());
+
+        repository.delete(departamento.get());
     }
     @Override
     @Transactional
@@ -80,7 +82,7 @@ public class DepartamentoServiceImpl implements DepartamentoService {
         LOG.info("updating users");
 
         var entity = repository.findById(id)
-                .orElseThrow(() -> new DepartamentoNotFoundException(NOT_FOUND_SECTOR));
+                .orElseThrow(() -> new ObjectNotFoundException(NOT_FOUND_SECTOR));
 
         entity.setName(dto.getName());
         entity.setStatus(dto.getStatus());
@@ -89,7 +91,7 @@ public class DepartamentoServiceImpl implements DepartamentoService {
     @Override
     public void disable(Integer id_sector){
         var entity = repository.findById(id_sector)
-                .orElseThrow(() -> new DepartamentoNotFoundException(NOT_FOUND_SECTOR));
+                .orElseThrow(() -> new ObjectNotFoundException(NOT_FOUND_SECTOR));
 
         entity.setStatus(false);
         MapperDTO.parseObject(repository.save(entity), DepartamentoDTO.class);
