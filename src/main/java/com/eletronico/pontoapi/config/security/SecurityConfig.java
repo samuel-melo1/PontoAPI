@@ -36,23 +36,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/v2/login/signin").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/user/create-user").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/user/list-users").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/user/update").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/user/delete/{id}").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/sector/delete/{id}").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/sector/create").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/sector/list-sectors").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/sector/update/{name}").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/sector/list/{id}").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/position/list-positions").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/position/create").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/position/delete/{id}").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/role/create").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
-                        .requestMatchers(HttpMethod.GET, "/api/v1/role/list-roles").hasAnyAuthority("ADMINISTRADOR", "GESTOR")
-                        .requestMatchers(HttpMethod.POST, "/api/auth/forgot-password").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login/signin").permitAll()
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -60,17 +44,14 @@ public class SecurityConfig {
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
     @Bean
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
-
     public static final String[] AUTH_WHITELIST = {
             "/api/v1/auth/**",
             "/v3/api-docs/**",

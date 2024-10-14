@@ -16,6 +16,7 @@ public class RestErrorMessage {
     private String message;
     private String path;
 
+
     public RestErrorMessage() {
     }
 

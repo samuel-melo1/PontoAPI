@@ -12,14 +12,12 @@ public class ResponseHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("message", message);
         response.put("httpStatus", httpStatus);
-
         return new ResponseEntity<>(response, httpStatus);
     }
     public static ResponseEntity<Object> responseDelete(String message, HttpStatus httpStatus){
         Map<String, Object> response = new HashMap<>();
         response.put("message", message);
         response.put("httpStatus", httpStatus);
-
         return new ResponseEntity<>(response, httpStatus);
     }
     public static ResponseEntity<Object> responseUpdate(Object dto, HttpStatus httpStatus){
