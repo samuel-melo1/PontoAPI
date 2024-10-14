@@ -1,6 +1,5 @@
 package com.eletronico.pontoapi.core.domain;
 
-import com.eletronico.pontoapi.core.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,13 +16,13 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
-public class Position implements Serializable {
+public class Cargo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_position;
+    private Integer id_cargo;
     private String name;
     private Boolean status;
     @JsonIgnore
-    @OneToMany(mappedBy = "position")
+    @OneToMany(mappedBy = "cargo")
     private List<User> users = new ArrayList<>();
 }

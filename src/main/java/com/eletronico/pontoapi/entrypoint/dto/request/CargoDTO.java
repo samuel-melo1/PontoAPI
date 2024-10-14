@@ -1,10 +1,8 @@
 package com.eletronico.pontoapi.entrypoint.dto.request;
 
-import com.eletronico.pontoapi.core.domain.Position;
+import com.eletronico.pontoapi.core.domain.Cargo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,10 +14,10 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Data
-public class PositionDTO {
+public class CargoDTO {
 
     @JsonIgnore
-    private List<Position> positions;
+    private List<Cargo> cargos;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer id_position;
