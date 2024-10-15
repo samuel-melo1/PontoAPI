@@ -19,10 +19,7 @@ public class CargoDTO {
     @JsonIgnore
     private List<Cargo> cargos;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer id_position;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean status;
 }

@@ -19,10 +19,7 @@ public class DepartamentoDTO implements Serializable {
     @JsonIgnore
     private List<Departamento> departamentos;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer id_departamento;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean status;
 }
