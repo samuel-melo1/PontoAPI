@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.util.Locale;
+
 @OpenAPIDefinition(info = @Info(title = "Ponto API", version = "1.0",description = "Eletronic Management People System"))
 @SpringBootApplication
 @EnableCaching
@@ -14,6 +16,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class PontoApiApplication {
 
     public static void main(String[] args) {
+
+        Locale.setDefault(new Locale("pt", "BR"));
         SpringApplication.run(PontoApiApplication.class, args);
     }
 

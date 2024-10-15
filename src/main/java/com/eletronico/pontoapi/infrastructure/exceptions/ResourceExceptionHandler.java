@@ -50,7 +50,7 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<RestErrorMessage> handleInvalidCredentialsException(BadCredentialsException ex, HttpServletRequest request) {
         return new ResponseEntity<RestErrorMessage>(
-                new RestErrorMessage(Instant.now(), HttpStatus.BAD_REQUEST.value(), ex.getMessage(),
+                new RestErrorMessage(Instant.now(), HttpStatus.BAD_REQUEST.value(), "Email ou senha inválidos!",
                         request.getRequestURI()), HttpStatus.UNAUTHORIZED);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
