@@ -17,7 +17,7 @@ public class TokenVO implements Serializable {
     private Date expiration;
     private String accessToken;
     private String refreshToken;
-    private List<String> roles;
+    private List<String> roles = new ArrayList<>();
 
 
     public TokenVO(){
@@ -30,7 +30,7 @@ public class TokenVO implements Serializable {
         this.expiration = expiration;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-        this.roles = new ArrayList<>();
+        this.roles = roles;
     }
 
     public String getUsername() {
