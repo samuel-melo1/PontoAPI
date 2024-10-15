@@ -37,10 +37,9 @@ public class UserController {
         service.disableUser(id);
         return ResponseHandler.responseDelete("Disable User Sucess", HttpStatus.OK);
     }
-
     @GetMapping
     public ResponseEntity<List<UserDTO>> findAll(@RequestParam(name = "page", defaultValue = "0") int page,
-                                                     @RequestParam(name = "size", defaultValue = "10") int size) {
+                                                 @RequestParam(name = "size", defaultValue = "10") int size) {
         return new ResponseEntity<>(service.listUser(page, size), HttpStatus.OK);
     }
     @GetMapping("/{id}")

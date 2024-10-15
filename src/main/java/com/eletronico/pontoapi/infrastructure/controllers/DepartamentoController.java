@@ -17,20 +17,20 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/departamentos")
 public class DepartamentoController {
+
     @Autowired
     private DepartamentoService service;
+
     @PostMapping("/create")
     public ResponseEntity<Object> create(@RequestBody @Valid List<Departamento> departamentos) {
         service.create(departamentos);
         return ResponseHandler.responseCreated("Created Sucess", HttpStatus.OK);
     }
-
     @PostMapping("/disable/{id}")
     public ResponseEntity<Object> disable(@PathVariable("id") Integer id) {
         service.disable(id);
         return ResponseHandler.responseDelete("Disable Departamento Sucess", HttpStatus.OK);
     }
-
     @GetMapping
     public ResponseEntity<Page<DepartamentoDTO>> list(@RequestParam(name = "page") int page,
                                                       @RequestParam(name = "size") int size){
