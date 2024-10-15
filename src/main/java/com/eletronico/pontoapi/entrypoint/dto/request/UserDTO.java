@@ -3,16 +3,15 @@ package com.eletronico.pontoapi.entrypoint.dto.request;
 import com.eletronico.pontoapi.core.domain.Cargo;
 import com.eletronico.pontoapi.core.domain.Departamento;
 import com.eletronico.pontoapi.core.domain.Role;
-import com.eletronico.pontoapi.core.enums.UserRole;
 import com.eletronico.pontoapi.utils.validation.OnCreate;
 import com.eletronico.pontoapi.utils.validation.OnUpdate;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.MapsId;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
@@ -37,7 +36,6 @@ public class UserDTO {
     private String name;
     private Cargo cargo;
     private Departamento departamento;
-    private UserRole userRole;
     private List<Role> permissions;
     private Long totalElements;
 

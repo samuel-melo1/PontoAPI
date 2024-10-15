@@ -47,7 +47,7 @@ public class AuthService {
 
         var user = repository.findByEmail(username);
         var tokenResponse = new TokenVO();
-        if (user != null) {
+        if (user.isPresent()) {
             tokenResponse = filter.refreshToken(refreshToken);
         } else {
             throw new UsernameNotFoundException("Username " + username + " not found!");

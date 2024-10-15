@@ -1,6 +1,6 @@
 package com.eletronico.pontoapi.application.usecases;
 
-import com.eletronico.pontoapi.core.exceptions.NotPermitDeleteAdmException;
+import com.eletronico.pontoapi.core.exceptions.DataIntegrityException;
 import com.eletronico.pontoapi.core.exceptions.ObjectAlreadyExistException;
 import com.eletronico.pontoapi.core.exceptions.ObjectNotFoundException;
 import com.eletronico.pontoapi.infrastructure.persistence.UserRepository;
@@ -21,10 +21,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.eletronico.pontoapi.core.enums.DataIntegrityViolationError.CPF_ALREADY_EXIST;
+import static com.eletronico.pontoapi.core.enums.DataIntegrityViolationError.EMAIL_ALREADY_EXIST;
 import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.ALREDY_EXIST;
 import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.NOT_EXIST;
-import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.NOT_PERMITED_DELETE;
-import static com.eletronico.pontoapi.core.enums.UserExceptionStatusError.NOT_PERMITED_DISABLE;
 
 @Service
 @Slf4j
@@ -40,12 +41,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO saveUser(UserDTO userDTO) {
         LOG.info("creating a new user");
+        userDTO.setId(null);
 
-        if (userRepository.existsPessoaByEmail(userDTO.getEmail())) {
-            throw new ObjectAlreadyExistException(ALREDY_EXIST);
-        }
+        validaPorCpfEEmail(userDTO);
         User newUser = User.builder()
-                .id_user(null)
                 .email(userDTO.getEmail())
                 .password(passwordEncoder.encode(userDTO.getPassword()))
                 .telefone(userDTO.getTelefone())
@@ -126,5 +125,16 @@ public class UserServiceImpl implements UserService {
         var entityUser = userRepository.findById(id_user)
                 .orElseThrow(() -> new ObjectNotFoundException(NOT_EXIST));
         MapperDTO.parseObject(userRepository.save(entityUser), UserDTO.class);
+    }
+
+    private void validaPorCpfEEmail(UserDTO dto) {
+        Optional<User> obj = userRepository.findByCpf(dto.getCpf());
+        if (obj.isPresent() && obj.get().getId_user() != dto.getId()) {
+            throw new DataIntegrityException(CPF_ALREADY_EXIST);
+        }
+        obj = userRepository.findByEmail(dto.getEmail());
+        if (obj.isPresent() && obj.get().getId_user() != dto.getId()) {
+            throw new DataIntegrityException(EMAIL_ALREADY_EXIST);
+        }
     }
 }

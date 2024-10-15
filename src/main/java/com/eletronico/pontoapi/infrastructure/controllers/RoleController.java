@@ -23,7 +23,7 @@ public class RoleController {
         service.create(dto);
         return ResponseHandler.responseCreated("Create Sucess", HttpStatus.CREATED);
     }
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<Role>> list() {
         return new ResponseEntity<>(service.list(), HttpStatus.OK);
     }
