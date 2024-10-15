@@ -4,7 +4,6 @@ import com.eletronico.pontoapi.core.exceptions.NotPermitDeleteAdmException;
 import com.eletronico.pontoapi.core.exceptions.ObjectAlreadyExistException;
 import com.eletronico.pontoapi.core.exceptions.ObjectNotFoundException;
 import com.eletronico.pontoapi.infrastructure.persistence.UserRepository;
-import com.eletronico.pontoapi.utils.GenericValidAdministrator;
 import com.eletronico.pontoapi.utils.MapperDTO;
 import com.eletronico.pontoapi.core.domain.User;
 import com.eletronico.pontoapi.entrypoint.dto.request.UserDTO;
@@ -13,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
@@ -45,9 +45,9 @@ public class UserServiceImpl implements UserService {
             throw new ObjectAlreadyExistException(ALREDY_EXIST);
         }
         User newUser = User.builder()
+                .id_user(null)
                 .email(userDTO.getEmail())
                 .password(passwordEncoder.encode(userDTO.getPassword()))
-                .userRole(userDTO.getUserRole())
                 .telefone(userDTO.getTelefone())
                 .status(true)
                 .cpf(userDTO.getCpf())
@@ -74,20 +74,17 @@ public class UserServiceImpl implements UserService {
                                 .name(user.getName())
                                 .cargo(user.getCargo())
                                 .departamento(user.getDepartamento())
-                                .userRole(user.getUserRole())
                                 .permissions(user.getPermissions())
                                 .totalElements(findTotalElementsInDataBase()).build()).collect(Collectors.toList()), UserDTO.class);
     }
 
     @Override
-    public Optional<User> findUserByEmail(String email) {
+    public Optional<UserDTO> findUserByEmail(String email) {
         LOG.info("find users by email");
         var userExist = Optional.ofNullable(userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new ObjectNotFoundException(NOT_EXIST)));
-        return Optional.of(userExist.get());
+        return Optional.of(MapperDTO.parseObject(Optional.of(userExist.get()), UserDTO.class));
     }
-
-    @Cacheable("totalElements")
     public Long findTotalElementsInDataBase() {
         return userRepository.count();
     }
@@ -105,7 +102,6 @@ public class UserServiceImpl implements UserService {
     public void delete(Integer id) {
         LOG.info("delete users by id");
         var user = findUserById(id);
-        GenericValidAdministrator.verify(user.get().getPermissions(), new NotPermitDeleteAdmException(NOT_PERMITED_DELETE));
         userRepository.deleteById(user.get().getId());
     }
 
@@ -114,34 +110,21 @@ public class UserServiceImpl implements UserService {
     public UserDTO update(UserDTO dto, Integer id) {
         LOG.info("updating users");
 
-        User userPersisted = userRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(NOT_EXIST));
+        dto.setId(id);
+        Optional<UserDTO> oldUser = findUserById(id);
 
-        userPersisted.setEmail(dto.getEmail());
-        userPersisted.setName(dto.getName());
-        userPersisted.setTelefone(dto.getTelefone());
-        userPersisted.setCpf(dto.getCpf());
-        userPersisted.setStatus(dto.getStatus());
-        LOG.info("user persisted ");
-
-        userPersisted.setCargo(dto.getCargo());
-        userPersisted.setDepartamento(dto.getDepartamento());
-        userPersisted.setPermissions(dto.getPermissions());
-        return MapperDTO.parseObject(userRepository.save(userPersisted), UserDTO.class);
+        if(oldUser.isPresent() && dto.getPassword() != oldUser.get().getPassword()){
+            dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+        User newUser = new User();
+        BeanUtils.copyProperties(oldUser, newUser);
+        return MapperDTO.parseObject(userRepository.save(newUser), UserDTO.class);
     }
 
     @Transactional
     public void disableUser(Integer id_user) {
         var entityUser = userRepository.findById(id_user)
                 .orElseThrow(() -> new ObjectNotFoundException(NOT_EXIST));
-
-        GenericValidAdministrator.verify(entityUser.getPermissions(), new NotPermitDeleteAdmException(NOT_PERMITED_DISABLE));
-
-        entityUser.setAccountNonExpired(false);
-        entityUser.setAccountNonLocked(false);
-        entityUser.setCredentialsNonExpired(false);
-        entityUser.setEnabled(false);
-        entityUser.setStatus(false);
         MapperDTO.parseObject(userRepository.save(entityUser), UserDTO.class);
     }
 }

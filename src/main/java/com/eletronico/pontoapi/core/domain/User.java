@@ -1,6 +1,7 @@
 package com.eletronico.pontoapi.core.domain;
 
 import com.eletronico.pontoapi.core.enums.UserRole;
+import com.eletronico.pontoapi.entrypoint.dto.request.UserDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ import java.util.List;
 @Data
 @Builder
 @Table(name = "users")
-public class User implements UserDetails, Serializable {
+public class User implements  Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,12 +37,6 @@ public class User implements UserDetails, Serializable {
     @CPF
     private String cpf;
     private Boolean status;
-    @JsonIgnore
-    private UserRole userRole;
-    private Boolean accountNonExpired;
-    private Boolean accountNonLocked;
-    private Boolean credentialsNonExpired;
-    private Boolean enabled;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cargo_id")
     private Cargo cargo;
@@ -61,32 +56,33 @@ public class User implements UserDetails, Serializable {
         }
         return roles;
     }
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-      return this.permissions;
-     }
-    @Override
-    public String getUsername() {
-        return email;
-    }
-    @Override
-    public String getPassword() {
-        return password;
-    }
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//      return this.permissions;
+//     }
+//    @Override
+//    public String getUsername() {
+//        return email;
+//    }
+//    @Override
+//    public String getPassword() {
+//        return password;
+//    }
+//    @Override
+//    public boolean isAccountNonExpired() {
+//        return true;
+//    }
+//    @Override
+//    public boolean isAccountNonLocked() {
+//        return true;
+//    }
+//    @Override
+//    public boolean isCredentialsNonExpired() {
+//        return true;
+//    }
+//    @Override
+//    public boolean isEnabled() {
+//        return true;
+//    }
 }

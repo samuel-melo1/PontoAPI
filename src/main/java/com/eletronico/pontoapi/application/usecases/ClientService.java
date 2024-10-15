@@ -1,5 +1,6 @@
 package com.eletronico.pontoapi.application.usecases;
 
+import com.eletronico.pontoapi.config.security.UserSS;
 import com.eletronico.pontoapi.infrastructure.persistence.UserRepository;
 import com.eletronico.pontoapi.core.exceptions.InvalidJwtAuthenticationException;
 import com.eletronico.pontoapi.core.domain.User;
@@ -21,9 +22,9 @@ public class ClientService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = repository.findByEmail(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("Username " + username + " Not Found!");
+        if (user != null) {
+            return new UserSS(user.getId_user(), user.getEmail(), user.getPassword(), user.getPermissions());
         }
-        return user;
+        throw new UsernameNotFoundException("Username " + username + " Not Found!");
     }
 }
