@@ -47,7 +47,7 @@ public class DepartamentoServiceImpl extends InterceptorException<Departamento> 
 
     @Override
     @Cacheable("listSectors")
-    public Page<DepartamentoDTO> list(Integer page, Integer pageSize) {
+    public Page<DepartamentoDTO> findAll(Integer page, Integer pageSize) {
         Pageable pages = PageRequest.of(page, pageSize);
         Page<Departamento> pagedResult = repository.findAll(pages);
 
@@ -58,7 +58,7 @@ public class DepartamentoServiceImpl extends InterceptorException<Departamento> 
     }
 
     @Override
-    public Optional<DepartamentoDTO> findSectorById(Integer id) {
+    public Optional<DepartamentoDTO> findById(Integer id) {
         LOG.info("find users by id");
         var departamento = Optional.ofNullable(repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(NOT_FOUND_SECTOR)));

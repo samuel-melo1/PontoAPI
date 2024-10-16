@@ -34,11 +34,11 @@ public class DepartamentoController {
     @GetMapping
     public ResponseEntity<Page<DepartamentoDTO>> list(@RequestParam(name = "page") int page,
                                                       @RequestParam(name = "size") int size){
-        return ResponseEntity.ok(service.list(page, size));
+        return ResponseEntity.ok(service.findAll(page, size));
     }
     @GetMapping("/{id}")
     public ResponseEntity<Optional<DepartamentoDTO>> findByID(@PathVariable("id") Integer id){
-        return  ResponseEntity.ok(service.findSectorById(id));
+        return  ResponseEntity.ok(service.findById(id));
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable("id") Integer id) {

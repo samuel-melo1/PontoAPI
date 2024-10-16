@@ -12,8 +12,8 @@ public interface DepartamentoService {
 
     DepartamentoDTO create(List<Departamento> departamentos);
     DepartamentoDTO update(DepartamentoDTO dto, Integer name);
-    Page<DepartamentoDTO> list(Integer page, Integer pageSize);
+    Page<DepartamentoDTO> findAll(Integer page, Integer pageSize);
     void delete(Integer id);
     void disable(Integer id_departamento);
-    Optional<DepartamentoDTO> findSectorById(Integer id);
+    Optional<DepartamentoDTO> findById(Integer id);
 }
