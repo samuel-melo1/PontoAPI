@@ -19,7 +19,7 @@ public class CargoDTO {
     @JsonIgnore
     private List<Cargo> cargos;
 
-    private Integer id_position;
+    private Integer id_cargo;
     private String name;
     private Boolean status;
 }
