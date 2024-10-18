@@ -10,7 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,14 +24,15 @@ public class DepartamentoController {
     private DepartamentoService service;
 
     @PostMapping("/create")
-    public ResponseEntity<Object> create(@RequestBody @Valid List<Departamento> departamentos) {
-        service.create(departamentos);
-        return ResponseHandler.responseCreated("Created Sucess", HttpStatus.OK);
+    public ResponseEntity<DepartamentoDTO> create(@RequestBody @Valid DepartamentoDTO dto) {
+        URI uri = ServletUriComponentsBuilder.
+                fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId_departamento()).toUri();
+        return ResponseEntity.created(uri).body(service.create(dto));
     }
     @PostMapping("/disable/{id}")
     public ResponseEntity<Object> disable(@PathVariable("id") Integer id) {
         service.disable(id);
-        return ResponseHandler.responseDelete("Disable Departamento Sucess", HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
     @GetMapping
     public ResponseEntity<Page<DepartamentoDTO>> list(@RequestParam(name = "page") int page,
@@ -38,15 +41,15 @@ public class DepartamentoController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<Optional<DepartamentoDTO>> findByID(@PathVariable("id") Integer id){
-        return  ResponseEntity.ok(service.findById(id));
+        return ResponseEntity.ok(service.findById(id));
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable("id") Integer id) {
         service.delete(id);
-        return ResponseHandler.responseDelete("Delete Sucess", HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<Object> update(@RequestBody @Valid DepartamentoDTO dto, @PathVariable("id") Integer id) {
-        return ResponseHandler.responseUpdate(service.update(dto, id), HttpStatus.OK);
+    public ResponseEntity<DepartamentoDTO> update(@RequestBody @Valid DepartamentoDTO dto, @PathVariable("id") Integer id) {
+        return ResponseEntity.ok().body(service.update(dto, id));
     }
 }

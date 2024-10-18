@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface DepartamentoService {
 
-    DepartamentoDTO create(List<Departamento> departamentos);
+    DepartamentoDTO create(DepartamentoDTO departamentos);
     DepartamentoDTO update(DepartamentoDTO dto, Integer name);
     Page<DepartamentoDTO> findAll(Integer page, Integer pageSize);
     void delete(Integer id);

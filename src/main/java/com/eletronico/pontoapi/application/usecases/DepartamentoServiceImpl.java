@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -33,16 +34,16 @@ public class DepartamentoServiceImpl extends InterceptorException<Departamento> 
 
     @Transactional
     @Override
-    public DepartamentoDTO create(List<Departamento> departamentos) {
+    public DepartamentoDTO create(DepartamentoDTO dto) {
         LOG.info("creating departamento");
-        for (Departamento departamento : departamentos) {
-            var entity = repository.findByName(departamento.getName());
-            if (entity.isPresent()) {
-                throw new ObjectAlreadyExistException(ALREDY_EXIST);
-            }
-            departamento.setStatus(true);
+        var entity = repository.findByName(dto.getName());
+        if (entity.isPresent()) {
+            throw new ObjectAlreadyExistException(ALREDY_EXIST);
         }
-        return MapperDTO.parseObject(repository.saveAll(departamentos), DepartamentoDTO.class);
+        dto.setStatus(true);
+        Departamento newDepartamento = new Departamento();
+        BeanUtils.copyProperties(dto, newDepartamento);
+        return MapperDTO.parseObject(repository.save(newDepartamento), DepartamentoDTO.class);
     }
 
     @Override
