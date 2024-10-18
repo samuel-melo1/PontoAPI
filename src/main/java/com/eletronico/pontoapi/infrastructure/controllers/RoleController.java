@@ -36,4 +36,10 @@ public class RoleController {
     public ResponseEntity<Optional<RoleDTO>> findById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok().body(service.findById(id));
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> delete(@PathVariable("id") Integer id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
