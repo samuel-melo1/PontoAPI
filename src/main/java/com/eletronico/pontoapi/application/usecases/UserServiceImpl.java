@@ -1,21 +1,30 @@
 package com.eletronico.pontoapi.application.usecases;
 
+import com.eletronico.pontoapi.application.gateways.CargoService;
+import com.eletronico.pontoapi.application.gateways.DepartamentoService;
+import com.eletronico.pontoapi.core.domain.Cargo;
+import com.eletronico.pontoapi.core.domain.Departamento;
 import com.eletronico.pontoapi.core.exceptions.DataIntegrityException;
 import com.eletronico.pontoapi.core.exceptions.ObjectAlreadyExistException;
 import com.eletronico.pontoapi.core.exceptions.ObjectNotFoundException;
+import com.eletronico.pontoapi.entrypoint.dto.request.CargoDTO;
+import com.eletronico.pontoapi.entrypoint.dto.request.DepartamentoDTO;
 import com.eletronico.pontoapi.infrastructure.persistence.UserRepository;
 import com.eletronico.pontoapi.utils.MapperDTO;
 import com.eletronico.pontoapi.core.domain.User;
 import com.eletronico.pontoapi.entrypoint.dto.request.UserDTO;
 import com.eletronico.pontoapi.application.gateways.UserService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -35,13 +44,20 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private CargoService cargoService;
+    @Autowired
+    private DepartamentoService departamentoService;
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class.getName());
 
     @Transactional
     @Override
     public UserDTO saveUser(UserDTO userDTO) {
         LOG.info("creating a new user");
-        userDTO.setId(null);
+        userDTO.setId_user(null);
+
+        Optional<CargoDTO> cargoObj = cargoService.findById(userDTO.getCargo().getId_cargo());
+        Optional<DepartamentoDTO> departamentoObj = departamentoService.findById(userDTO.getDepartamento().getId_departamento());
 
         validaPorCpfEEmail(userDTO);
         User newUser = User.builder()
@@ -50,31 +66,18 @@ public class UserServiceImpl implements UserService {
                 .telefone(userDTO.getTelefone())
                 .status(true)
                 .cpf(userDTO.getCpf())
-                .cargo(userDTO.getCargo())
-                .departamento(userDTO.getDepartamento())
+                .cargo(MapperDTO.parseObject(cargoObj, Cargo.class))
+                .departamento(MapperDTO.parseObject(departamentoObj, Departamento.class))
                 .name(userDTO.getName())
                 .permissions(userDTO.getPermissions()).build();
+
         return MapperDTO.parseObject(userRepository.save(newUser), UserDTO.class);
     }
 
     @Override
-    @Cacheable("users")
     public List<UserDTO> listUser(Integer page, Integer pageSize) {
         return MapperDTO.parseListObjects(
-                userRepository.findAll(PageRequest.of(page, pageSize))
-                        .stream()
-                        .map(user -> UserDTO.builder()
-                                .id(user.getId_user())
-                                .email(user.getEmail())
-                                .password(user.getPassword())
-                                .telefone(user.getTelefone())
-                                .cpf(user.getCpf())
-                                .status(user.getStatus())
-                                .name(user.getName())
-                                .cargo(user.getCargo())
-                                .departamento(user.getDepartamento())
-                                .permissions(user.getPermissions())
-                                .totalElements(findTotalElementsInDataBase()).build()).collect(Collectors.toList()), UserDTO.class);
+                userRepository.findAll(PageRequest.of(page, pageSize)).toList(), UserDTO.class);
     }
 
     @Override
@@ -83,9 +86,6 @@ public class UserServiceImpl implements UserService {
         var userExist = Optional.ofNullable(userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new ObjectNotFoundException(NOT_EXIST)));
         return Optional.of(MapperDTO.parseObject(Optional.of(userExist.get()), UserDTO.class));
-    }
-    public Long findTotalElementsInDataBase() {
-        return userRepository.count();
     }
 
     @Override
@@ -101,22 +101,24 @@ public class UserServiceImpl implements UserService {
     public void delete(Integer id) {
         LOG.info("delete users by id");
         var user = findUserById(id);
-        userRepository.deleteById(user.get().getId());
+        userRepository.deleteById(user.get().getId_user());
     }
 
     @Override
     @Transactional
-    public UserDTO update(UserDTO dto, Integer id) {
+    public UserDTO update(@Valid UserDTO userDTO, Integer id) {
         LOG.info("updating users");
 
-        dto.setId(id);
+        userDTO.setId_user(id);
         Optional<UserDTO> oldUser = findUserById(id);
 
-        if(oldUser.isPresent() && dto.getPassword() != oldUser.get().getPassword()){
-            dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+        if (!userDTO.getPassword().equals(oldUser.get().getPassword())) {
+            userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
+        validaPorCpfEEmail(userDTO);
+
         User newUser = new User();
-        BeanUtils.copyProperties(oldUser, newUser);
+        BeanUtils.copyProperties(userDTO, newUser);
         return MapperDTO.parseObject(userRepository.save(newUser), UserDTO.class);
     }
 
@@ -129,12 +131,13 @@ public class UserServiceImpl implements UserService {
 
     private void validaPorCpfEEmail(UserDTO dto) {
         Optional<User> obj = userRepository.findByCpf(dto.getCpf());
-        if (obj.isPresent() && obj.get().getId_user() != dto.getId()) {
+        if (obj.isPresent() && obj.get().getId_user() != dto.getId_user()) {
             throw new DataIntegrityException(CPF_ALREADY_EXIST);
         }
         obj = userRepository.findByEmail(dto.getEmail());
-        if (obj.isPresent() && obj.get().getId_user() != dto.getId()) {
+        if (obj.isPresent() && obj.get().getId_user() != dto.getId_user()) {
             throw new DataIntegrityException(EMAIL_ALREADY_EXIST);
         }
+
     }
 }

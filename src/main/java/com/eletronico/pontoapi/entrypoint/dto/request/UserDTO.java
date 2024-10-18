@@ -20,8 +20,8 @@ import java.util.List;
 @AllArgsConstructor
 
 public class UserDTO {
-    @MapsId("id_user")
-    private Integer id;
+
+    private Integer id_user;
     @NotBlank(message = "O  e-mail não deve ser nulo ou vazio", groups = {OnCreate.class, OnUpdate.class})
     @Email(message = "E-mail Invalido", groups = {OnCreate.class, OnUpdate.class})
     private String email;
@@ -37,6 +37,5 @@ public class UserDTO {
     private Cargo cargo;
     private Departamento departamento;
     private List<Role> permissions;
-    private Long totalElements;
 
 }

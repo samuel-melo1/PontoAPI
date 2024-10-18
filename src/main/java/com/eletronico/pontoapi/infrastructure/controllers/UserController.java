@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,31 +32,32 @@ public class UserController {
     private UserService service;
     @PostMapping("/create")
     public ResponseEntity<Object> saveUser(@Validated(OnCreate.class) @RequestBody @Valid  UserDTO userDTO) {
-        service.saveUser(userDTO);
-        return ResponseHandler.responseCreated("Created sucess", HttpStatus.OK);
+        URI uri = ServletUriComponentsBuilder.
+                fromCurrentRequest().path("/{id}").buildAndExpand(userDTO.getId_user()).toUri();
+        return ResponseEntity.created(uri).body(service.saveUser(userDTO));
     }
     @PutMapping("/disable/{id}")
     public ResponseEntity<Object> disable(@PathVariable("id") Integer id) {
         service.disableUser(id);
-        return ResponseHandler.responseDelete("Disable User Sucess", HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
     @GetMapping
     public ResponseEntity<List<UserDTO>> findAll(@RequestParam(name = "page", defaultValue = "0") int page,
                                                  @RequestParam(name = "size", defaultValue = "10") int size) {
-        return new ResponseEntity<>(service.listUser(page, size), HttpStatus.OK);
+        return ResponseEntity.ok().body(service.listUser(page, size));
     }
     @GetMapping("/{id}")
     public ResponseEntity<Optional<UserDTO>> findByID(@PathVariable("id") Integer id){
-        return  ResponseEntity.ok(service.findUserById(id));
+        return ResponseEntity.ok(service.findUserById(id));
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable("id") Integer id) {
         service.delete(id);
-        return ResponseHandler.responseDelete("Delete Sucess", HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<Object> update(@Validated(OnUpdate.class)  @RequestBody @Valid UserDTO dto, @PathVariable("id") Integer id) {
-        return ResponseHandler.responseUpdate(service.update(dto, id), HttpStatus.OK);
+    public ResponseEntity<Object> update(@Validated(OnUpdate.class) @RequestBody @Valid UserDTO dto, @PathVariable("id") Integer id) {
+        return ResponseEntity.ok(service.update(dto, id));
     }
 
 }
