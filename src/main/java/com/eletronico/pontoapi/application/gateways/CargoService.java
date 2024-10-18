@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface CargoService {
 
-    CargoDTO create(List<Cargo> cargos);
+    CargoDTO create(CargoDTO cargos);
     Page<CargoDTO> findAll(Integer page, Integer pageSize);
     void delete(Integer id);
     CargoDTO update(CargoDTO dto);

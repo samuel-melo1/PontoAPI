@@ -11,7 +11,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Getter
 public enum CargoExceptionStatusError implements IDomainErrorCode {
     ALREDY_EXIST("000", "Cargo já existe. É necessário a criação de outro!", CONFLICT),
-    NOT_FOUND_POSITION("001","Cargo não encontrado!", NOT_FOUND);
+    NOT_FOUND_CARGO("001","Cargo não encontrado!", NOT_FOUND);
 
     private final String code;
     private final String message;
