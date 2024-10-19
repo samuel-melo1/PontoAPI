@@ -12,7 +12,6 @@ public interface CargoService {
     CargoDTO create(CargoDTO cargos);
     Page<CargoDTO> findAll(Integer page, Integer pageSize);
     void delete(Integer id);
-    CargoDTO update(CargoDTO dto);
-    void disable(Integer id_user);
+    CargoDTO update(CargoDTO dto, Integer id);
     Optional<CargoDTO> findById(Integer id);
 }

@@ -51,7 +51,7 @@ public class CargoServiceImpl implements CargoService {
         return MapperDTO.parseObject(repository.save(newCargo), CargoDTO.class);
     }
 
-    @Cacheable("listPositions")
+    @Override
     public Page<CargoDTO> findAll(Integer page, Integer pageSize) {
         Pageable pages = PageRequest.of(page, pageSize);
         Page<Cargo> pagedResult = repository.findAll(pages);
@@ -73,40 +73,36 @@ public class CargoServiceImpl implements CargoService {
 
     @Transactional
     @Override
-    public void delete(Integer id) {
-        LOG.info("delete cargo by id");
-        var entity = Optional.ofNullable(repository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(NOT_FOUND_CARGO)));
-
-        try {
-            repository.delete(entity.get());
-            repository.flush();
-        } catch (DataIntegrityViolationException e) {
-            throw new DataIntegrityException(NOT_PERMIT_DELETE);
-        }
-
-    }
-
-    @Transactional
-    @Override
-    public CargoDTO update(CargoDTO dto) {
+    public CargoDTO update(CargoDTO dto, Integer id) {
         LOG.info("updating users");
+
+        dto.setId_cargo(id);
 
         var entity = repository.findByName(dto.getName())
                 .orElseThrow(() -> new ObjectNotFoundException(NOT_FOUND_CARGO));
 
         entity.setName(dto.getName());
         entity.setStatus(dto.getStatus());
+
+        Cargo newObj = new Cargo();
+        BeanUtils.copyProperties(entity, newObj);
+
         return MapperDTO.parseObject(repository.save(entity), CargoDTO.class);
     }
 
     @Transactional
     @Override
-    public void disable(Integer id_user) {
-        var entity = repository.findById(id_user)
-                .orElseThrow(() -> new ObjectNotFoundException(NOT_FOUND_CARGO));
+    public void delete(Integer id) {
+        LOG.info("delete cargo by id");
+        var entity = findById(id);
 
-        entity.setStatus(false);
-        MapperDTO.parseObject(repository.save(entity), CargoDTO.class);
+        try {
+            repository.delete(MapperDTO.parseObject(entity, Cargo.class));
+            repository.flush();
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityException(NOT_PERMIT_DELETE);
+        }
     }
+
+
 }

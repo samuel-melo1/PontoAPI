@@ -12,8 +12,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @AllArgsConstructor
 public enum DepartamentoExceptionStatusError implements IDomainErrorCode {
 
-    ALREDY_EXIST("000", "Setor já existe. É necessário a criação de outro!", CONFLICT),
-    NOT_FOUND_SECTOR("001","Setor não encontrado!", NOT_FOUND);
+    ALREDY_EXIST("000", "Departamento já existe. É necessário a criação de outro!", CONFLICT),
+    NOT_FOUND_SECTOR("001","Departamento não encontrado!", NOT_FOUND);
 
     private final String code;
     private final String message;
