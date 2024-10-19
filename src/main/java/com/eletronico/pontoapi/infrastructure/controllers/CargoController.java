@@ -27,17 +27,16 @@ public class CargoController {
                 fromCurrentRequest().path("/{id}").buildAndExpand(cargo.getId_cargo()).toUri();
         return ResponseEntity.created(uri).body(service.create(cargo));
     }
-    @PostMapping("/disable/{id}")
-    public ResponseEntity<Object> disable(@PathVariable("id") Integer id) {
-        service.disable(id);
-        return ResponseEntity.noContent().build();
-    }
     @GetMapping
     public ResponseEntity<Page<CargoDTO>> list(@RequestParam(name = "page") int page,
                                                @RequestParam(name = "size") int size) {
         return ResponseEntity.ok().body(service.findAll(page, size));
     }
+    @PutMapping("/{id}")
 
+    public ResponseEntity<CargoDTO> update(@Valid @RequestBody CargoDTO dto, @PathVariable("id") Integer id){
+        return ResponseEntity.ok().body(service.update(dto, id));
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Optional<CargoDTO>> findByID(@PathVariable("id") Integer id){
         return ResponseEntity.ok(service.findById(id));
