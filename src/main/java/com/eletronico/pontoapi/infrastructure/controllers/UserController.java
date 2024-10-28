@@ -1,13 +1,11 @@
 package com.eletronico.pontoapi.infrastructure.controllers;
 
-import com.eletronico.pontoapi.infrastructure.gateways.ResponseHandler;
 import com.eletronico.pontoapi.entrypoint.dto.request.UserDTO;
 import com.eletronico.pontoapi.application.gateways.UserService;
 import com.eletronico.pontoapi.utils.validation.OnCreate;
 import com.eletronico.pontoapi.utils.validation.OnUpdate;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
